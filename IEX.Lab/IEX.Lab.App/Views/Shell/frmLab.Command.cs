@@ -1,0 +1,525 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace IEX.Lab.App.Views
+{
+    using DevExpress.XtraBars.Docking;
+    using System.Windows.Forms;
+    using IEX.Utilities;
+    using IEX.Utilities.Types;
+    using IEX.Server.Monitor.Client.MonitoringServiceReference;
+    partial class frmLab
+    {
+        IEX.Utilities.CommandManager _command_manager;
+
+        private void InitializeCommandManager()
+        {
+            _command_manager = new IEX.Utilities.CommandManager();
+            _command_manager.RegisterCommandExecutor("IEX.Lab.App.IexStb", new IexStbCommandExecutor());
+            _command_manager.RegisterCommandExecutor("IEX.Lab.App.NativeTreeView", new NativeTreeViewCommandExecutor());
+            _command_manager.RegisterCommandExecutor("IEX.Lab.App.IexStbGridView", new IEX.Utilities.DataGridViewCommandExecutor());
+            _command_manager.RegisterCommandExecutor("IEX.Lab.App.IexComputersGridView", new IEX.Utilities.DataGridViewCommandExecutor());
+            _command_manager.RegisterCommandExecutor("DevExpress.XtraBars.Docking.DockPanel", new DockPanelCommandExecutor());
+            //_command_manager.RegisterCommandExecutor("DevExpress.XtraEditors.SimpleButton", new SimpleButtonCommandExecutor());
+            _command_manager.RegisterCommandExecutor("IEX.Lab.App.Views.MyButton", new MyButtonCommandExecutor());
+
+            // Add All Commands
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("ContentSelected", new IEX.Utilities.PCommand.ExecuteHandler(ContentSelectedHandler), null));
+
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("ContentHosts", null, null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("ContentServersGid", null, null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("ContentServersBox", null, null));
+            //_command_manager.Commands.Add(new IEX.Utilities.PCommand("ContentGroups", null, null));
+
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("NewFile", new IEX.Utilities.PCommand.ExecuteHandler(NewFileHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("OpenFile", new IEX.Utilities.PCommand.ExecuteHandler(OpenFileHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("ExportFile", new IEX.Utilities.PCommand.ExecuteHandler(ExportFileHandler), null));
+
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("AddHost", new IEX.Utilities.PCommand.ExecuteHandler(AddHostHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("EditHost", new IEX.Utilities.PCommand.ExecuteHandler(EditHostHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("RemoveHosts", new IEX.Utilities.PCommand.ExecuteHandler(RemoveHostsHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("HostSelected", new IEX.Utilities.PCommand.ExecuteHandler(HostsSelectedHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("HostConfigure", new IEX.Utilities.PCommand.ExecuteHandler(HostConfigureHandler), null));
+            //uzi: canceling updating the iex version via cell click
+            //_command_manager.Commands.Add(new IEX.Utilities.PCommand("HostUpdate", new IEX.Utilities.PCommand.ExecuteHandler(HostUpdateHandler), null));
+
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("AddGroup", new IEX.Utilities.PCommand.ExecuteHandler(AddGroupHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("RemoveGroups", new IEX.Utilities.PCommand.ExecuteHandler(RemoveGroupsHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("RemoveGroupServers", new IEX.Utilities.PCommand.ExecuteHandler(RemoveGroupsServersHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("RenameGroup", new IEX.Utilities.PCommand.ExecuteHandler(RenameGroupHandler), null));
+
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("DeleteServer", new IEX.Utilities.PCommand.ExecuteHandler(DeleteServerHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("ServerSelected", new IEX.Utilities.PCommand.ExecuteHandler(ServersSelectedHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("ServerConfigure", new IEX.Utilities.PCommand.ExecuteHandler(ServerConfigureHandler), null));
+
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("StartServer", new IEX.Utilities.PCommand.ExecuteHandler(StartServerHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("StopServer", new IEX.Utilities.PCommand.ExecuteHandler(StopServerHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("RestartServer", new IEX.Utilities.PCommand.ExecuteHandler(RestartServerHandler), null));
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("InstallHost", new IEX.Utilities.PCommand.ExecuteHandler(InstallHostHandler), null));
+#if IEX_DEBUG
+            _command_manager.Commands.Add(new IEX.Utilities.PCommand("StatusServer", new IEX.Utilities.PCommand.ExecuteHandler(StatusServerHandler), null));
+#endif
+
+            // Associate UI Instances with commands
+            _command_manager.Commands["ContentSelected"].CommandInstances.Add(treeNavigator, "AfterSelect");
+
+            _command_manager.Commands["ContentHosts"].CommandInstances.Add(iexComputersGrid1, null);
+            _command_manager.Commands["ContentServersGid"].CommandInstances.Add(iexStbGridServers, null);
+            _command_manager.Commands["ContentServersBox"].CommandInstances.Add(iexFlowLayoutPanel1, null);
+
+            _command_manager.Commands["NewFile"].CommandInstances.Add(mniFileNew, "Click");
+            _command_manager.Commands["OpenFile"].CommandInstances.Add(mniFileOpen, "Click");
+            _command_manager.Commands["ExportFile"].CommandInstances.Add(mniFileExport, "Click");
+
+            _command_manager.Commands["AddHost"].CommandInstances.Add(mniHostsAdd, "Click");
+            _command_manager.Commands["EditHost"].CommandInstances.Add(mniHostsEdit, "Click");
+            //Func<System.Windows.Forms.KeyEventArgs, bool> iexComputersGrid1KeyDown = x => { return x.KeyData == System.Windows.Forms.Keys.Delete; };
+            //_command_manager.Commands["RemoveHosts"].CommandInstances.Add(iexComputersGrid1, "KeyDown", iexComputersGrid1KeyDown);
+            _command_manager.Commands["RemoveHosts"].CommandInstances.Add(mniHostsRemove, "Click");
+            _command_manager.Commands["HostSelected"].CommandInstances.Add(iexComputersGrid1, "MouseUp");
+            Func<System.Windows.Forms.DataGridViewCellEventArgs, bool> iexComputersConfigurationClick = x => { return x.ColumnIndex == iexComputersGrid1.colComputersConfiguration.Index; };
+            _command_manager.Commands["HostConfigure"].CommandInstances.Add(iexComputersGrid1, "CellClick", iexComputersConfigurationClick);
+            //uzi: canceling updating the iex version via cell click
+            //Func<System.Windows.Forms.DataGridViewCellEventArgs, bool> iexComputersUpdateClick = x => { return x.ColumnIndex == iexComputersGrid1.colComputersMonitorVersion.Index && x.RowIndex >=0; };
+            //_command_manager.Commands["HostUpdate"].CommandInstances.Add(iexComputersGrid1, "CellClick", iexComputersUpdateClick);
+
+            _command_manager.Commands["AddGroup"].CommandInstances.Add(mniGroupsAdd, "Click");
+            _command_manager.Commands["RemoveGroups"].CommandInstances.Add(mniGroupsRemove, "Click");
+            _command_manager.Commands["RemoveGroupServers"].CommandInstances.Add(mniGroupsRemoveSelectedServers, "Click");
+            _command_manager.Commands["RenameGroup"].CommandInstances.Add(mniGroupsRenameGroup, "Click");
+
+            Func<System.Windows.Forms.KeyEventArgs, bool> iexStbServersDeleteKeyDown = x => { return x.KeyData == System.Windows.Forms.Keys.Delete; };
+            _command_manager.Commands["DeleteServer"].CommandInstances.Add(iexComputersGrid1, "KeyDown", iexStbServersDeleteKeyDown);//iexStbGridServers
+            _command_manager.Commands["DeleteServer"].CommandInstances.Add(iexFlowLayoutPanel1, "KeyDown", iexStbServersDeleteKeyDown);
+            _command_manager.Commands["ServerSelected"].CommandInstances.Add(iexStbGridServers, "MouseUp");
+            _command_manager.Commands["ServerSelected"].CommandInstances.Add(iexFlowLayoutPanel1, "SelectedIndexChanged");
+            Func<System.Windows.Forms.DataGridViewCellEventArgs, bool> iexStbGridServersClick = x => { return x.ColumnIndex == iexStbGridServers.colServersConfiguration.Index; };
+            _command_manager.Commands["ServerConfigure"].CommandInstances.Add(iexStbGridServers, "CellClick", iexStbGridServersClick);
+
+            _command_manager.Commands["StartServer"].CommandInstances.Add(btnStart, "Click");
+            _command_manager.Commands["StopServer"].CommandInstances.Add(btnStop, "Click");
+            _command_manager.Commands["RestartServer"].CommandInstances.Add(btnRestart, "Click");
+            _command_manager.Commands["InstallHost"].CommandInstances.Add(btnInstall, "Click");
+#if IEX_DEBUG
+            //_command_manager.Commands["StatusServer"].CommandInstances.Add(btnStatus, "Click");
+#endif
+        }
+
+        public void ContentSelectedHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string content = (string)_presenter.SelectedContent;
+            documentManagerMain.View.BeginUpdate();
+
+            if (content == "Computers")
+            {
+                _command_manager.Commands["ContentHosts"].Visible = true;
+                tabbedView1.ActivateDocument(iexComputersGrid1);
+                //_presenter.ReloadHosts();
+            }
+            else
+            {
+                _command_manager.Commands["ContentHosts"].Visible = false;
+            }
+            if (content.StartsWith("IEX Servers") || content.StartsWith("Groups\\"))
+            {
+                _command_manager.Commands["ContentServersGid"].Visible = true;
+                _command_manager.Commands["ContentServersBox"].Visible = true;
+                //_presenter.ReloadServers();
+                tabbedView1.ActivateDocument(iexStbGridServers);
+            }
+            else
+            {
+                _command_manager.Commands["ContentServersGid"].Visible = false;
+                _command_manager.Commands["ContentServersBox"].Visible = false;
+            }
+            if (content == "Groups")
+            {
+                _command_manager.Commands["ContentHosts"].Visible = false;
+                _command_manager.Commands["ContentServersGid"].Visible = false;
+                _command_manager.Commands["ContentServersBox"].Visible = false;
+            }
+
+            ContentHostSelectedHandler(sender, cmd);
+            ContentServerSelectedHandler(sender, cmd);
+            ContentGroupSelectedHandler(sender, cmd);
+            HostsSelectedHandler(sender, cmd);
+            ServersSelectedHandler(sender, cmd);
+            GroupsSelectedHandler(sender, cmd);
+
+            documentManagerMain.View.EndUpdate();
+        }
+
+        public void ContentHostSelectedHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string content = (string)_presenter.SelectedContent;
+            if (content == "Computers")
+            {
+                HostsSelectedHandler(sender, cmd);
+            }
+            else
+            {
+                _command_manager.Commands["AddHost"].Enabled = false;
+                _command_manager.Commands["RemoveHosts"].Enabled = false;
+                _command_manager.Commands["EditHost"].Enabled = false;
+            }
+        }
+
+        public void ContentServerSelectedHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+        }
+
+        public void ContentGroupSelectedHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string content = (string)_presenter.SelectedContent;
+            if (content == "Groups")
+            {
+                _command_manager.Commands["AddGroup"].Enabled = true;
+            }
+            else
+            {
+                _command_manager.Commands["AddGroup"].Enabled = false;
+            }
+        }
+
+        #region File
+        public void NewFileHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "IexLab Files|*.iexlab";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string file_name = dialog.FileName;
+                _presenter.New(file_name);
+                _presenter.Open(file_name);
+                _mru_list.InsertElement(file_name);
+                this.Text = string.Format("Lab {0} - {1}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, _mru_list.ValueAt(0));
+            }
+        }
+
+        public void OpenFileHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "IexLab Files|*.iexlab";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string file_name = dialog.FileName;
+                _presenter.Open(file_name);
+                _mru_list.InsertElement(file_name);
+                this.Text = string.Format("Lab {0} - {1}", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version, _mru_list.ValueAt(0));
+            }
+        }
+
+        public void ExportFileHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Filter = "IexLab Files|*.iexlab";
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string file_name = dialog.FileName;
+                _presenter.SaveAs(file_name);
+            }
+        }
+        #endregion File
+
+        #region Host
+        public void AddHostHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            frmHostDialog dialog = new frmHostDialog();
+            IEnumerable<string> hosts = _presenter.GetHosts().Select(item => item.HostId);
+            System.Collections.Specialized.StringCollection default_hosts = Properties.Settings.Default.Hosts;
+            if (default_hosts != null)
+            {
+                string[] array = new string[default_hosts.Count];
+                default_hosts.CopyTo(array, 0);
+                dialog.Hosts(array.Except(hosts).ToArray());
+            }
+            dialog.ExcludedHosts(hosts.ToArray());
+            dialog.Mode = frmHostDialog.DialogMode.Add;
+            DialogResult result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                string host_id = dialog.SelectedHost;
+                if (host_id.Length == 0)
+                {
+                    System.Windows.Forms.MessageBox.Show("Invalid host");
+                    return;
+                }
+                int[] ids = dialog.Servers();
+                if (ids.Length == 0)
+                {
+                    System.Windows.Forms.MessageBox.Show("Please select servers to add.");
+                    return;
+
+                }
+                string[] servers = ids.Select(item => "IEX_" + item.ToString()).ToArray();
+                _presenter.Add(host_id, servers);
+            }
+        }
+
+        public void EditHostHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            if (_presenter.SelectedHosts.Count == 0)
+                return;
+            Client.Host host = _presenter.SelectedHosts[0];
+            IList<Client.Server> servers = _presenter.GetServers();
+            IEnumerable<Client.Server> host_servers = servers.Where(item => item.HostId == host.HostId);
+            frmHostDialog dialog = new frmHostDialog();
+            IEnumerable<int> ids = host_servers.Select(item => Convert.ToInt32(item.ServerId.Replace("IEX_", string.Empty)));
+            dialog.SelectedHost = host.HostId;
+            dialog.ConfiguratedIdsServers(_presenter.GetConfiguratedIdsServers(host.HostId));
+            dialog.Servers(ids);
+            dialog.Mode = frmHostDialog.DialogMode.Edit;
+            DialogResult result = dialog.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                int[] new_ids = dialog.Servers();
+                if (new_ids.Length != 0)
+                {
+                    IEnumerable<int> add_ids = new_ids.Except(ids);
+                    IEnumerable<int> remove_ids = ids.Except(new_ids);
+                    _presenter.Add(host.HostId, add_ids.Select(item => "IEX_" + item.ToString()));
+                    List<Tuple<string, string>> remove = remove_ids.Select(item => new Tuple<string, string>(host.HostId, "IEX_" + item.ToString())).ToList();
+                    _presenter.DeleteServer(remove);
+                }
+                else
+                {
+                    _presenter.DeleteHost(host.HostId);
+                }
+            }
+        }
+
+        public void RemoveHostsHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            foreach (Client.Host host in _presenter.SelectedHosts)
+                _presenter.DeleteHost(host.HostId);
+        }
+
+        public void HostsSelectedHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string content = (string)_presenter.SelectedContent;
+            
+            _command_manager.Commands["InstallHost"].Visible = content == "Computers";
+            _command_manager.Commands["InstallHost"].Enabled = content == "Computers" && _presenter.SelectedHosts.Count > 0;
+            
+            if (content == "Computers")
+            {
+                _command_manager.Commands["AddHost"].Enabled = true;
+                int count = 0;
+                if (_command_manager.Commands["ContentHosts"].Visible == true)
+                    count = _presenter.SelectedHosts.Count;
+
+                _command_manager.Commands["RemoveHosts"].Enabled = count > 0;
+                _command_manager.Commands["EditHost"].Enabled = count == 1;
+            }
+        }
+
+        public void HostConfigureHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string host_id = (string)iexComputersGrid1.SelectedRows[0].Cells[iexComputersGrid1.colComputersName.Index].Value;
+            IList<Client.Server> servers = _presenter.GetServers();
+            IEnumerable<Client.Server> host_servers = servers.Where(item => item.HostId == host_id);
+            IEnumerable<string> ids = host_servers.Select(item => item.ServerId.Replace("IEX_", string.Empty));
+            string arguments = string.Join(" ", ids);
+
+            string path = System.IO.Path.Combine(IEX.Utilities.IEXConfiguration.GetIexInstallationFolder(), "IEX.NG.Configuration.App.exe");
+
+            if (string.IsNullOrEmpty(path))
+                return;
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+
+            startInfo.FileName = path;
+            startInfo.Arguments = host_id + " " + arguments;
+            Tracer.Write(Tracer.TraceLevel.INFO, string.Format("Start: '{0} {1}'", startInfo.FileName, startInfo.Arguments));
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            System.Diagnostics.Process configurationProcess = System.Diagnostics.Process.Start(startInfo);
+        }
+
+        public void HostUpdateHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            if (iexComputersGrid1.SelectedRows.Count == 0) return;
+
+            HostViewModel hostVM = iexComputersGrid1.SelectedRows[0].DataBoundItem as HostViewModel;
+            
+            MonitorState runningEnum = MonitorState.Running;
+            if (hostVM.Status != runningEnum.GetDescription()) return;
+
+            string host_id = hostVM.Computer;
+
+            if (MessageBox.Show(this, "Do you want to update IEX version?", "Update IEX Version", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                return;
+
+            _presenter.UpdateHost(host_id, null);
+        }
+        #endregion Host
+
+        #region Group
+        public void GroupsSelectedHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string content = (string)_presenter.SelectedContent;
+            _command_manager.Commands["RemoveGroups"].Enabled = content.StartsWith("Groups\\");
+            _command_manager.Commands["RemoveGroupServers"].Enabled = (content.StartsWith("Groups\\"));// && (_presenter.SelectedServers.Count != 0));
+            _command_manager.Commands["RenameGroup"].Enabled = (content.StartsWith("Groups\\"));// && (_presenter.SelectedServers.Count != 0));
+            ServersSelectedHandler(sender, cmd);
+        }
+
+        public void AddGroupHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string value = null;
+            if (IEX.Utilities.Dialogs.InputTextBox.Show("Add Group", "Group Name:", ref value) == System.Windows.Forms.DialogResult.OK)
+            {
+                _presenter.AddGroup(value);
+            }
+        }
+
+        public void RemoveGroupsHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            if (treeNavigator.SelectedNode.Parent != null && treeNavigator.SelectedNode.Parent.Text == "Groups")
+                _presenter.DeleteGroup(_presenter.SelectedGroups[0].Name);
+        }
+
+
+        public void RenameGroupHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string value = null;
+            if (IEX.Utilities.Dialogs.InputTextBox.Show("Rename Group", "New group name:", ref value) == System.Windows.Forms.DialogResult.OK)
+            {
+                _presenter.RenameGroup(_presenter.SelectedGroups[0].Name, value);
+                IList<Client.Group> groups = _presenter.GetGroups();
+                IEnumerable<Client.Group> selected_groups = groups.Where(item => item.Name == value);
+                _presenter.SelectedGroups = selected_groups.ToList();
+                TreeNode[] tt = null;
+                TreeNode[] t = null;
+                t = treeNavigator.Nodes.Cast<TreeNode>().Where(r => r.Text == "Groups").ToArray();
+                tt = t[0].Nodes.Cast<TreeNode>().Where(r => r.Text == value).ToArray();
+                treeNavigator.SelectedNode = tt[0];
+            }
+        }
+
+
+        public void RemoveGroupsServersHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            IEX.Lab.Client.ServerList servers = new Client.ServerList();
+            servers.AddRange(_presenter.SelectedServers);
+            _presenter.RemoveServersFromGroup(treeNavigator.SelectedNode.Text, servers);
+            TreeNode backup = treeNavigator.SelectedNode;
+            treeNavigator.SelectedNode = treeNavigator.SelectedNode.Parent;
+            treeNavigator.SelectedNode = backup;
+        }
+        #endregion Group
+
+        #region Server
+
+        public void DeleteServerHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            if (treeNavigator.SelectedNode.Text == "Computers")
+            {
+                RemoveHostsHandler(sender, cmd);
+            }
+            else if (treeNavigator.SelectedNode.Parent != null && treeNavigator.SelectedNode.Parent.Text == "Groups")
+            {
+                System.Windows.Forms.DialogResult res = System.Windows.Forms.MessageBox.Show("Do you want do delete the selected servers from the group?", "Delete Servers", MessageBoxButtons.YesNo);
+                if (res == System.Windows.Forms.DialogResult.No)
+                    return;
+                IEX.Lab.Client.ServerList servers = new IEX.Lab.Client.ServerList();
+                foreach (DataGridViewRow row in iexStbGridServers.SelectedRows)
+                    servers.Add(new Client.Server(row.Cells[iexStbGridServers.colServersComputer.Index].Value as string, row.Cells[iexStbGridServers.colServersIEX.Index].Value as string));
+                Client.Group group = _presenter.GetGroups().First(item => item.Name == treeNavigator.SelectedNode.Text);
+
+                IEX.Lab.Client.ServerList result_servers = Client.ServerList.Convert(
+                group.Servers.Except(servers, new IEX.Utilities.Collections.LambdaEqualityComparer<Client.Server>(
+                                                                                    delegate(Client.Server x, Client.Server y)
+                                                                                    {
+                                                                                        if (x.HostId == y.HostId && x.ServerId == y.ServerId)
+                                                                                            return true;
+                                                                                        return false;
+                                                                                    }
+                    )).ToList());
+                _presenter.SetGroup(treeNavigator.SelectedNode.Text, result_servers);
+            }
+        }
+
+        public void ServersSelectedHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            Client.Server server = null;
+            if ((_command_manager.Commands["ContentServersGid"].Visible == true || _command_manager.Commands["ContentServersBox"].Visible == true) && _presenter.SelectedServers != null)
+                server = _presenter.SelectedServers.ToList().Find(item => item.Status == Client.ServerDataState.NotRunning);
+            _command_manager.Commands["StartServer"].Enabled = server != null;
+            if ((_command_manager.Commands["ContentServersGid"].Visible == true || _command_manager.Commands["ContentServersBox"].Visible == true) && _presenter.SelectedServers != null)
+                server = _presenter.SelectedServers.ToList().Find(item => item.Status == Client.ServerDataState.Loading || item.Status == Client.ServerDataState.Idle || item.Status == Client.ServerDataState.Connected || item.Status == Client.ServerDataState.ShuttingDown);
+            _command_manager.Commands["StopServer"].Enabled = server != null;
+            _command_manager.Commands["RestartServer"].Enabled = server != null;           
+
+            if (_presenter.SelectedServers.Count == 1)
+            {
+                if (_presenter.SelectedServers[0].ServerInfo != null)
+                {
+                    Client.Host host = _presenter.GetHosts().FirstOrDefault(item => item.HostId == _presenter.SelectedServers[0].HostId);
+                    if (host != null && host.SubsystemsMetadata != null)
+                    {
+                        var services_view_model = new IEX.Server.Monitor.Client.ServiceViewModelCollection(host.SubsystemsMetadata, _presenter.SelectedServers[0].ServerInfo.Services);
+                        treeStatus.ItemsSource = services_view_model;
+                        return;
+                    }
+                }
+            }
+            treeStatus.ItemsSource = null;
+        }
+
+        public void ServerConfigureHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            string host_id = (string)iexStbGridServers.SelectedRows[0].Cells[iexStbGridServers.colServersComputer.Index].Value;
+            string server_id = (string)iexStbGridServers.SelectedRows[0].Cells[iexStbGridServers.colServersIEX.Index].Value;
+
+            string path = System.IO.Path.Combine(IEX.Utilities.IEXConfiguration.GetIexInstallationFolder(), "IEX.RemoteDeviceAccess.App.exe");
+            if (string.IsNullOrEmpty(path))
+                return;
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+
+            startInfo.FileName = path;
+            startInfo.Arguments = host_id + " " + server_id.Replace("IEX_", string.Empty);
+            Tracer.Write(Tracer.TraceLevel.INFO, string.Format("Start: '{0} {1}'", startInfo.FileName, startInfo.Arguments));
+            System.Diagnostics.Process.Start(startInfo);
+        }
+
+        public void StartServerHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            IList<Client.Server> servers = _presenter.SelectedServers;
+            _presenter.StartServer(servers);
+        }
+
+        public void StopServerHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            IList<Client.Server> servers = _presenter.SelectedServers;
+            _presenter.StopServer(servers);
+        }
+
+        public void RestartServerHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            IList<Client.Server> servers = _presenter.SelectedServers;
+            _presenter.RestartServer(servers);
+        }
+
+        public void InstallHostHandler(object sender, IEX.Utilities.PCommand cmd)
+        {           
+            //if (MessageBox.Show(this, "Do you want to update IEX version for selected hosts?", "Update IEX Version", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+            //    return;
+
+            frmInstall install = new frmInstall();
+            if (install.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                foreach (Client.Host host in _presenter.SelectedHosts)
+                    _presenter.UpdateHost(host.HostId, install.Version);
+            }
+        }
+#if IEX_DEBUG
+        public void StatusServerHandler(object sender, IEX.Utilities.PCommand cmd)
+        {
+            IList<Client.Server> servers = _presenter.SelectedServers;
+            _presenter.StatusServer(servers);
+        }
+#endif
+        #endregion Server
+    }
+}

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?include ../defines.wxi ?>
+
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Fragment Id='$(var.projectname)'>
+
+    <DirectoryRef Id="INSTALLDIR">
+
+      <Component Id="$(var.projectname)__" Guid='{24D0A715-6ED5-45D2-AF06-36818AA49B46}'>
+
+        <!-- DLL Files -->
+        <!-- Lab dll-->
+        <File 
+          Id='IEX.Lab.Client.dll' 
+          Name='IEX.Lab.Client.dll'
+          Source='IEX.Lab.Client\bin\$(var.Configuration)\IEX.Lab.Client.dll' 
+          Vital='yes'/>
+		
+		    <!-- Exe files -->
+        <!-- Lab app-->
+        <File 
+          Id='IEX.Lab.App.exe' 
+          Name='IEX.Lab.App.exe'
+          Source='IEX.Lab.App/bin/$(var.Configuration)/IEX.Lab.App.exe' 
+          Vital='yes'>
+        <Shortcut
+              Id='$(var.projectname).exe__shortcut'
+              Description='IEX Lab'
+              Name='Lab'
+              Directory='ProgramMenuIEXFolder'
+              WorkingDirectory='INSTALLDIR'/>
+        </File>
+        <File 
+		  Id='StructureMap.dll'
+		  Name='StructureMap.dll'
+		  Source='$(var.bindepend_directory)Framework/StructureMap.dll' 
+		  Vital='yes' />
+
+        <!-- Config files-->
+        <File 
+          Id='IEX.Lab.App.exe.config' 
+          Name='IEX.Lab.App.exe.config'
+          Source='IEX.Lab.App/bin/$(var.Configuration)/IEX.Lab.App.exe.config' 
+          Vital='yes'/>
+		<File 
+          Id='IEX.AutomaticInstaller.dll' 
+          Name='IEX.AutomaticInstaller.dll'
+          Source='IEX.Lab.App/bin/$(var.Configuration)/IEX.AutomaticInstaller.dll' 
+          Vital='yes'/>
+      </Component>
+
+    </DirectoryRef>
+	
+	<!-- Dependencies -->
+    <ComponentGroup Id='$(var.projectname)'>
+      <ComponentRef Id='$(var.projectname)__'/>
+    </ComponentGroup>
+
+  </Fragment>
+</Wix>

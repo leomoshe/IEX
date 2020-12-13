@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1CF7C887-45F3-4EE0-BCC1-17F42FA0CD78}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IEX.Lab.Client</RootNamespace>
+    <AssemblyName>IEX.Lab.Client</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;IEX_DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisFailOnMissingRules>true</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\BinaryDependencies\Framework\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BBL\CatalogProvider.cs" />
+    <Compile Include="BBL\ICatalogProvider.cs" />
+    <Compile Include="Common\Interfaces\IHostFactory.cs" />
+    <Compile Include="Common\Interfaces\IGroupFactory.cs" />
+    <Compile Include="Common\Interfaces\IServerFactory.cs" />
+    <Compile Include="DAL\XmlCatalogRepository.cs" />
+    <Compile Include="DAL\ICatalogRepository.cs" />
+    <Compile Include="DAL\XmlRepository.cs" />
+    <Compile Include="DAL\IexLabXmlConfiguration.cs">
+      <DependentUpon>IexLabXmlConfiguration.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\IexLabXmlConfiguration.Utils.cs">
+      <DependentUpon>IexLabXmlConfiguration.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Group\GroupFactory.cs" />
+    <Compile Include="Group\Group.cs" />
+    <Compile Include="Host\Host.cs" />
+    <Compile Include="Host\HostData.cs" />
+    <Compile Include="DAL\IRepository.cs" />
+    <Compile Include="Host\HostFactory.cs" />
+    <Compile Include="PropertyValueChangedEventArgs.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\Server.cs" />
+    <Compile Include="Server\ServerFactory.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="StructureMapRegistry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="DAL\IexLabXmlConfiguration.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DAL\xsd_iex_lab_xml_config.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\IEX.Server\IEX.Server.Monitor\IEX.Server.Monitor.Client\IEX.Server.Monitor.Client.csproj">
+      <Project>{C051942A-6D96-4055-BA11-5843CEE8A5F2}</Project>
+      <Name>IEX.Server.Monitor.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Tracer\IEX.Tracer.csproj">
+      <Project>{58316FAE-92F5-41E6-8711-336282610C3A}</Project>
+      <Name>IEX.Tracer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Utilities\IEX.Utilities.csproj">
+      <Project>{4FF86296-0C0A-4C0C-BA4E-52DDBAC700D7}</Project>
+      <Name>IEX.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

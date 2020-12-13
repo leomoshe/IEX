@@ -1,0 +1,83 @@
+﻿table.Stats
+{
+    width:15%;
+    font-weight:bold;
+}
+
+table.Test
+{
+    border: 5px;
+    border-color:Black;
+    border-style:solid;
+    margin:0;
+    padding:0;
+    border-collapse:collapse;
+}
+
+tr.IsSummary
+{
+    background-color:Gray;
+}
+
+th
+{
+    font-weight:bold;
+    border: 1px;
+    border-color:Black;
+    border-style:solid;
+    margin:0;
+    padding:2px;
+    
+}
+
+td.Test
+{    
+    border: 1px;
+    border-color:Black;
+    border-style:solid;
+    margin:0;
+    padding:2px;
+}
+
+td.Pass
+{    
+    border: 1px;
+    border-color:Black;
+    border-style:solid;
+    background-color:Lime;
+    margin:0;
+    padding:2px;
+}
+
+td.Fail
+{    
+    border: 1px;
+    border-color:Black;
+    border-style:solid;
+    background-color:Red;
+    font-weight:bold;
+    margin:0;
+    padding:2px;
+}
+
+td.IexFail
+{    
+    border: 1px;
+    border-color:Black;
+    border-style:solid;
+    background-color:Orange;
+    font-weight:bold;
+    margin:0;
+    padding:2px;
+}
+
+td.NotRun
+{    
+    border: 1px;
+    border-color:Black;
+    border-style:solid;
+    background-color:Orange;
+    font-weight:bold;
+    margin:0;
+    padding:2px;
+}

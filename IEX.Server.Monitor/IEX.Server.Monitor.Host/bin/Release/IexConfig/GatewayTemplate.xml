@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<IexServerConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ConfigurationVersion="1.0" xmlns="http://www.nds.com/iex">
+  <Service Name="StbService.SubSystems.IPower" DisplayName="Power">
+    <Instance Name="Power" Implementation="StbService.SubSystems.IpRpc" ImplementationDisplayName="IP RPC Power Switch" Active="true">
+      <Param Description="IP" Value="127.0.0.1" />
+      <Param Description="Outlet Number" Value="123" />
+    </Instance>
+  </Service>
+  <Service Name="StbService.SubSystems.IRFSwitch" DisplayName="RF Switch">
+    <Instance Name="RF Switch" Implementation="StbService.SubSystems.SingleRFSwitch" ImplementationDisplayName="Single RF Switch" Active="true">
+      <Param Description="COM Port" />
+    </Instance>
+  </Service>
+  <Service Name="IEX.Server.Debug.IDebugManager" DisplayName="Communication">
+    <Instance Name="Communication" Implementation="IEX.Server.Debug.TelnetCommunication" ImplementationDisplayName="Telnet Communication" Active="true">
+      <Param Description="IP" Value="127.0.0.1" />
+      <Param Description="Port" Value="23" />
+      <Param Description="Newline Identifier" Value="\n" />
+      <Param Description="Streaming Port" Value="0" />
+      <Param Description="IP Address" Value="127.0.0.1" />
+    </Instance>
+  </Service>
+</IexServerConfiguration>

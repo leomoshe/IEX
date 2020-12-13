@@ -1,0 +1,1054 @@
+<?xml version="1.0" standalone="yes"?>
+<IexIniValidationDataSet xmlns="http://tempuri.org/IexIniValidationDataSet.xsd">
+  
+  <!--
+  Services:
+  
+-  IR
+-  Robot
+-  Sniffer
+-  DTMF
+-  FrameGrabber
+-  Audio
+-  Debug - Serial
+-  Debug - UDP
+-  Snapshot Pool 
+-  OCR
+-  EPG OCR
+-  Phone Switch
+-  RF Switch
+-  Power
+-  Switcher
+-  CA
+  
+  
+  
+  -->
+  <!--   ***************************************************************************************************************
+  
+                                                General Sections           
+                                                
+        ******************************************************************************************************************-->
+  
+    <!-- General - active sub systems -->
+  <Sections>
+    <Name>ACTIVE_SUB_SYSTEMS</Name>
+  </Sections>
+  
+  
+  <!-- Serial Port Configuration -->
+  <Sections>
+    <Name>CONFIGURE_SUB_SYSTEMS</Name>
+  </Sections>
+
+
+  <!--  Project Name - common to FG and IR-->
+  <Entries>
+    <Name>PROJECT_NAME</Name>
+    <SectionName>PROJECT_INFO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+  <!-- IAL -->  
+  <Sections>
+    <Name>IAL</Name>
+  </Sections>  
+  <Sections>
+    <Name>IAL_DB</Name>
+  </Sections>
+
+
+  <!--  **********************************************************************************************************
+  
+                                                               Server - General           
+                                                               
+       ************************************************************************************************************-->
+
+  <!-- Server Sections -->
+  <Sections>
+    <Name>SOCKET_CONFIGURATION</Name>
+  </Sections>
+
+  <!-- Server Entries -->
+  <Entries>
+    <Name>LISTEN_PORT</Name>
+    <SectionName>SOCKET_CONFIGURATION</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+
+  <!-- USB Host Selector 1-->
+  <Entries>
+    <Name>USB_HOST_SELECTOR1</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_1_SERIAL_NUMBER</Name>
+    <SectionName>USB_HOST_SELECTOR</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <!-- USB Host Selector 2-->
+  <Entries>
+    <Name>USB_HOST_SELECTOR2</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_2_SERIAL_NUMBER</Name>
+    <SectionName>USB_HOST_SELECTOR</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <!-- USB Device Selector 1-->
+  <Entries>
+    <Name>USB_DEVICE_SELECTOR1</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_1_SERIAL_NUMBER</Name>
+    <SectionName>USB_DEVICE_SELECTOR</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <!-- USB Device Selector 2-->
+  <Entries>
+    <Name>USB_DEVICE_SELECTOR2</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_2_SERIAL_NUMBER</Name>
+    <SectionName>USB_DEVICE_SELECTOR</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  
+  <!-- Simple switch 1-->
+  <Entries>
+    <Name>SIMPLE_SWITCH1</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_1_SERIAL_NUMBER</Name>
+    <SectionName>SIMPLE_SWITCH</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <!-- Simple switch 2-->
+  <Entries>
+    <Name>SIMPLE_SWITCH2</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_2_SERIAL_NUMBER</Name>
+    <SectionName>SIMPLE_SWITCH</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  <!--  **********************************************************************************************************
+  
+                                                               IR           
+                                                               
+       ************************************************************************************************************-->
+
+  <!-- Sections -->
+  <Sections>  
+    <Name>INFRA_RED</Name>
+  </Sections>  
+  <Sections>
+    <Name>PROJECT_INFO</Name>
+  </Sections>
+
+  <!-- IR Entries -->
+  <Entries>
+    <Name>INFRA_RED</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>INFRA_RED_COM_PORT</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>WAIT_BETWEEN_IR_CMD</Name>
+    <SectionName>INFRA_RED</SectionName>
+    <DefaultValue>1</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>IR_RESPONSE_TIME</Name>
+    <SectionName>INFRA_RED</SectionName>
+    <DefaultValue>0.6</DefaultValue>
+  </Entries>
+  
+  
+
+  
+  
+  <!--   ***********************************************************************************************************************
+  
+                                                              Frame Grabber       
+                                                                                                                            
+         ************************************************************************************************************************-->
+
+  <!-- Sections -->
+  
+  <Sections>
+    <Name>FG_MODE</Name>
+  </Sections>    
+  <Sections>
+    <Name>NUM_OF_SNAPSHOT_DIR</Name>
+  </Sections>  
+  <Sections>
+    <Name>FG_Number</Name>
+  </Sections>  
+  <Sections>
+    <Name>VIDEO_STREAMING</Name>
+  </Sections>  
+  <Sections>
+    <Name>COORDINATES_OFFSET</Name>
+  </Sections>
+
+  <!-- VNC -->
+  <Sections>
+    <Name>VNC</Name>
+  </Sections>
+
+  <!-- Frame Grabber Entries -->
+  <Entries>
+    <Name>FRAME_GRABBER</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>FG_MODE</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue>VAS</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>Format</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue>NTSC_FORMAT</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>PREVIEW_SIZE</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue>100,100</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>PREVIEW_LOCATION</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue>0,0</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>PREVIEW_TYPE</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue>SoftwarePreview</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>Standard</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue>S-VIDEO</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>FRAME_RATE</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue>30</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_NAME</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>CROSSBAR</Name>
+    <SectionName>FG_MODE</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>FG_Number</Name>
+    <SectionName>FG_Number</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <!--  Coordinates offsets  -->
+  <Entries>
+    <Name>ACTIVE</Name>
+    <SectionName>COORDINATES_OFFSET</SectionName>
+    <DefaultValue>ON</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>X</Name>
+    <SectionName>COORDINATES_OFFSET</SectionName>
+    <DefaultValue>0</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>Y</Name>
+    <SectionName>COORDINATES_OFFSET</SectionName>
+    <DefaultValue>0</DefaultValue>
+  </Entries>
+
+
+  <!--VMC FG Entries-->
+
+  <Entries>
+    <Name>IP</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>PASSWORD</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>MAKE_ROTATION</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue>False</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>ROTATION_ANGLE</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue>0</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>ENGINE</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue>SmartCode</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>ENCODING</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue>RFB_RAW</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>COLOR_DEPTH</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue>COLOR_FULL</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>CONNECTION_RETRIES</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue>5</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>TIMEOUT_ON_DISCONNECTION_IN_SEC</Name>
+    <SectionName>VNC</SectionName>
+    <DefaultValue>1</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>LISTEN_PORT</Name>
+    <SectionName>VIDEO_STREAMING</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>ACTIVE</Name>
+    <SectionName>VIDEO_STREAMING</SectionName>
+    <DefaultValue>false</DefaultValue>
+  </Entries>
+
+
+  <!--  **********************************************************************************************************
+  
+                                                               MilestonesEPG Controller          
+                                                               
+       ************************************************************************************************************-->
+  <!-- MilestonesEPG Controller Entries -->
+
+  <Sections>
+    <Name>MILESTONES_EPG</Name>
+  </Sections>
+  
+  <Entries>
+    <Name>MILESTONES_EPG</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>CONFIGURATION_FILE_PATH</Name>
+    <SectionName>MILESTONES_EPG</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>EPG_DICTIONARY_PATH</Name>
+    <SectionName>MILESTONES_EPG</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>MINIMUM_STATE_NAVIGATION_DELAY</Name>
+    <SectionName>MILESTONES_EPG</SectionName>
+    <DefaultValue>4000</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>MINIMUM_MENU_NAVIGATION_DELAY</Name>
+    <SectionName>MILESTONES_EPG</SectionName>
+    <DefaultValue>2000</DefaultValue>
+  </Entries>
+
+
+
+  <!--  **********************************************************************************************************
+  
+                                                               VNC Controller          
+                                                               
+       ************************************************************************************************************-->
+  <!-- VNC Controller Entries -->
+  <Entries>
+    <Name>VNC_CONTROLLER</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <!--  **********************************************************************************************************
+  
+                                                               OCR Controller          
+                                                               
+       ************************************************************************************************************-->
+  <!-- VNC Controller Entries -->
+  <Entries>
+    <Name>OCR</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>ON</DefaultValue>
+  </Entries>
+
+  <!-- ****************************************************************************************************************************
+  
+                                                                     Audio
+                                                                     
+  *********************************************************************************************************************************-->
+  
+  <Sections>
+    <Name>AUDIO</Name>
+  </Sections>
+
+  <Entries>
+    <Name>AUDIO_AMPLITUDE_THRESHOLD</Name>
+    <SectionName>AUDIO</SectionName>
+    <DefaultValue>10</DefaultValue>
+  </Entries>
+  
+  <Entries>
+    <Name>AUDIO_DEVICE_NAME</Name>
+    <SectionName>AUDIO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+  <!-- ****************************************************************************************************************************
+  
+                                                                     Power
+                                                                     
+  *********************************************************************************************************************************-->
+
+  <!-- Power -->  
+  <Sections>
+    <Name>POWER_CYCLING</Name>
+  </Sections>
+
+  <Entries>
+    <Name>POWER_CYCLING</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+  
+  <Entries>
+    <Name>POWER_CYCLING_COM_PORT</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  
+  <Entries>
+    <Name>STB_TO_POWER_CYCLE_PORT</Name>
+    <SectionName>POWER_CYCLING</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SNMP_IP</Name>
+    <SectionName>POWER_CYCLING</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_TYPE</Name>
+    <SectionName>POWER_CYCLING</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+  
+  <!-- ******************************************************************************************************************
+  
+                                                           Packet Services
+  
+  ************************************************************************************************************************-->
+  <Sections>
+    <Name>MUX_INFO</Name>
+  </Sections>
+
+  <Sections>
+    <Name>SSH_INFO</Name>
+  </Sections>
+
+  <Sections>
+    <Name>FS3_INFO</Name>
+  </Sections>
+
+
+  <!--  CA Entries  -->
+
+  <Entries>
+    <Name>MUX</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>PROJECT_START_YEAR</Name>
+    <SectionName>PROJECT_INFO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  
+  <Entries>
+    <Name>PROJECT_SPC_FILE</Name>
+    <SectionName>PROJECT_INFO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>ACTIVE</Name>
+    <SectionName>SSH_INFO</SectionName>
+    <DefaultValue>False</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>ACTIVE</Name>
+    <SectionName>FS3_INFO</SectionName>
+    <DefaultValue>False</DefaultValue>
+  </Entries>
+ 
+
+
+  <!-- ********************************************************************************************************************
+  
+                                                                    OCR                                   
+  
+  **************************************************************************************************************************-->
+  
+  <Sections>
+    <Name>OCR</Name>
+  </Sections>
+  
+  <!--  OCR Entries -->
+
+  <Entries>
+    <Name>ENABLE_EPG_DEBUG_OCR</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>False</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>EPG_DEBUG_OCR_ONLY</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>False</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>FONTS_DIRECTORY</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEBUG_OCR_TIMEOUT</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>0</DefaultValue>
+  </Entries>
+
+
+  <Entries>
+    <Name>SHOW_EPG_DEBUG_WINDOW</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>False</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>OCR_ENGINE</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>TOCR</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>OCR_RESOLUTION_MULTIPLICATION</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>1</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>CAPTURED_SURFACE_WIDTH</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>749</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>CAPTURED_SURFACE_HEIGHT</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>539</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>IMAGE_CORRECTION_X</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>13</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>IMAGE_CORRECTION_Y</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>22</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>EPG_SURFACE_WIDTH</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>720</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>EPG_SURFACE_HEIGHT</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>576</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>MAKE_COORDINATES_TRANSLATION</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue>True</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>FONT_DATA_FOLDER</Name>
+    <SectionName>OCR</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+
+
+  <!-- ***************************************************************************************************************
+  
+                                                                Debug Output                             
+  
+  *******************************************************************************************************************-->
+  
+  <Sections>
+    <Name>DEBUG_OUTPUT</Name>
+  </Sections>
+  
+  <!--  Debug Entries -->
+
+  <Entries>
+    <Name>DEBUG_OUTPUT</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEBUG_OUTPUT_COM_PORT</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>UDP_IP</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  
+  <Entries>
+    <Name>UDP_PORT</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>BAUDRATE</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue>115200</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>WRITE_UDP_TO_FILE</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue>False</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>INSTANCE1_TELNET_IP</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue>127.0.0.1</DefaultValue>
+  </Entries>
+  <Entries>
+    <Name>INSTANCE1_TELNET_PORT</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  <Entries>
+    <Name>INSTANCE1_TELNET_NEWLINE</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+    <Entries>
+    <Name>INSTANCE2_TELNET_IP</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  <Entries>
+    <Name>INSTANCE2_TELNET_PORT</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  <Entries>
+    <Name>INSTANCE2_TELNET_NEWLINE</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>INSTANCE1_SSH_IP</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  
+  <Entries>
+    <Name>INSTANCE1_SSH_PORT</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  
+  <Entries>
+    <Name>INSTANCE1_SSH_NEWLINE</Name>
+    <SectionName>DEBUG_OUTPUT</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  
+  <!--  ***********************************************************************************************************************
+  
+                                                        SmartCard Switcher  
+                                                        
+        *********************************************************************************************************************-->
+
+  <Entries>
+    <Name>SMART_CARD_SWITCHER</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SMART_CARD_SWITCHER</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>0</DefaultValue>
+  </Entries>
+
+
+
+  <!--  ***********************************************************************************************************************
+  
+                                                        DTMF  
+                                                        
+        *********************************************************************************************************************-->
+
+  <Entries>
+    <Name>DTMF_DETECTOR</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DTMF_DETECTOR_PORT</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+  <!--  ***********************************************************************************************************************
+  
+                                                        Phone Switch  
+                                                        
+        *********************************************************************************************************************-->
+
+  <Entries>
+    <Name>MODEM_SWITCH1</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>MODEM_SWITCH2</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>MODEM_SWITCH_COM_PORT1</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>MODEM_SWITCH_COM_PORT2</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+  <!--  ***********************************************************************************************************************
+  
+                                                               RF Switch  
+                                                        
+        *********************************************************************************************************************-->
+
+  <Entries>
+    <Name>RF_SWITCH1</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>RF_SWITCH2</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>RF_SWITCH_COM_PORT1</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>RF_SWITCH_COM_PORT2</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  
+  <Sections>
+    <Name>RF_SWITCH</Name>
+  </Sections>
+
+  <Entries>
+    <Name>STB_TO_RF_SWITCH_PORT1</Name>
+    <SectionName>RF_SWITCH</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>STB_TO_RF_SWITCH_PORT2</Name>
+    <SectionName>RF_SWITCH</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>RF_SW1_Device_Type</Name>
+    <SectionName>RF_SWITCH</SectionName>
+    <DefaultValue>8_OUTLET</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>RF_SW2_Device_Type</Name>
+    <SectionName>RF_SWITCH</SectionName>
+    <DefaultValue>8_OUTLET</DefaultValue>
+  </Entries>
+  <!-- ****************************************************************************************************************************************
+    
+                                                                Sniffer                              
+                                                                
+    *******************************************************************************************************************************************-->
+  <Sections>
+    <Name>SNIFFER_READER_INFO</Name>
+  </Sections>
+  
+  <!--  Sniffer Entries -->
+
+  <Entries>
+    <Name>SNIFFER_READER</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SNIFFER_READER_COM_PORT</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SYNCHRONIZE</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>PROJECT</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DECRYPTION</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_TYPE</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue>OLD</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SESNI_IP_ADDRESS</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SESNI_IP_PORT</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SESNI_OUTPUT_IP_ADDRESS</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>SESNI_OUTPUT_IP_PORT</Name>
+    <SectionName>SNIFFER_READER_INFO</SectionName>
+    <DefaultValue>-1</DefaultValue>
+  </Entries>
+
+  
+  <!-- ****************************************************************************************************************
+  
+                                                                      Robot 
+                                                                      
+      *********************************************************************************************************************-->
+
+  <Sections>
+    <Name>INSERTER_REMOVER</Name>
+  </Sections>
+
+  <Entries>
+    <Name>INSERTER_REMOVER</Name>
+    <SectionName>ACTIVE_SUB_SYSTEMS</SectionName>
+    <DefaultValue>OFF</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>INSERTER_REMOVER_COM_PORT</Name>
+    <SectionName>CONFIGURE_SUB_SYSTEMS</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_TYPE</Name>
+    <SectionName>INSERTER_REMOVER</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Sections>
+    <Name>FUSION_VNC_IR_CONFIGURATION</Name>
+  </Sections>
+
+
+  <Entries>
+    <Name>HOST</Name>
+    <SectionName>FUSION_VNC_IR_CONFIGURATION</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>PORT</Name>
+    <SectionName>FUSION_VNC_IR_CONFIGURATION</SectionName>
+    <DefaultValue>5900</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>DEVICE_TYPE</Name>
+    <SectionName>INFRA_RED</SectionName>
+    <DefaultValue>RCU</DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name>TELNET_IP</Name>
+    <SectionName>INFRA_RED</SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+
+  <!--
+  <Entries>
+    <Name></Name>
+    <SectionName></SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name></Name>
+    <SectionName></SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+
+  <Entries>
+    <Name></Name>
+    <SectionName></SectionName>
+    <DefaultValue></DefaultValue>
+  </Entries>
+  -->
+</IexIniValidationDataSet>

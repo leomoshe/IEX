@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Interfaces" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Interfaces" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/IEX.Server.ServiceManagement" />
+  <xs:complexType name="ArrayOfIexServerError">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="IexServerError" nillable="true" type="tns:IexServerError" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfIexServerError" nillable="true" type="tns:ArrayOfIexServerError" />
+  <xs:complexType name="IexServerError">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="AdditionalInfo" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Implementation" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Instance" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Service" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Time" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="IexServerError" nillable="true" type="tns:IexServerError" />
+  <xs:complexType name="ServerInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Connections" nillable="true" type="tns:ConnectionInfoCollection" />
+      <xs:element minOccurs="0" name="HashCode" type="xs:int" />
+      <xs:element minOccurs="0" name="Services" nillable="true" type="tns:ServiceInfoCollection" />
+      <xs:element minOccurs="0" name="Status" type="tns:ServerState" />
+      <xs:element minOccurs="0" name="UpTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="UserConnected" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServerInfo" nillable="true" type="tns:ServerInfo" />
+  <xs:complexType name="ConnectionInfoCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ConnectionInfo" nillable="true" type="tns:ConnectionInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConnectionInfoCollection" nillable="true" type="tns:ConnectionInfoCollection" />
+  <xs:complexType name="ConnectionInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Details" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="HostName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Mode" type="tns:ConnectionInfo.ConnectionMode" />
+      <xs:element minOccurs="0" name="StartTime" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="User" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConnectionInfo" nillable="true" type="tns:ConnectionInfo" />
+  <xs:simpleType name="ConnectionInfo.ConnectionMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Control" />
+      <xs:enumeration value="View" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ConnectionInfo.ConnectionMode" nillable="true" type="tns:ConnectionInfo.ConnectionMode" />
+  <xs:complexType name="ServiceInfoCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ServiceInfo" nillable="true" type="tns:ServiceInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServiceInfoCollection" nillable="true" type="tns:ServiceInfoCollection" />
+  <xs:complexType name="ServiceInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Implementations" nillable="true" type="tns:ImplementationInfoCollection" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServiceInfo" nillable="true" type="tns:ServiceInfo" />
+  <xs:complexType name="ImplementationInfoCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ImplementationInfo" nillable="true" type="tns:ImplementationInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ImplementationInfoCollection" nillable="true" type="tns:ImplementationInfoCollection" />
+  <xs:complexType name="ImplementationInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Instances" nillable="true" type="tns:InstanceInfoCollection" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ImplementationInfo" nillable="true" type="tns:ImplementationInfo" />
+  <xs:complexType name="InstanceInfoCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="InstanceInfo" nillable="true" type="tns:InstanceInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InstanceInfoCollection" nillable="true" type="tns:InstanceInfoCollection" />
+  <xs:complexType name="InstanceInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Error" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Parameters" nillable="true" type="tns:ParameterInfoCollection" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/IEX.Server.ServiceManagement" minOccurs="0" name="Status" type="q1:ServiceState" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InstanceInfo" nillable="true" type="tns:InstanceInfo" />
+  <xs:complexType name="ParameterInfoCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ParameterInfo" nillable="true" type="tns:ParameterInfo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ParameterInfoCollection" nillable="true" type="tns:ParameterInfoCollection" />
+  <xs:complexType name="ParameterInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ParameterInfo" nillable="true" type="tns:ParameterInfo" />
+  <xs:simpleType name="ServerState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="Loading" />
+      <xs:enumeration value="Idle" />
+      <xs:enumeration value="Connected" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ServerState" nillable="true" type="tns:ServerState" />
+</xs:schema>

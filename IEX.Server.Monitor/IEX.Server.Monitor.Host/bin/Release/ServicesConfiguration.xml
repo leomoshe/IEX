@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<iexServiceInstances>
+  <service name="IR">
+    <instance name="default" implementation="">
+      <param name="" type="" isServiceReference="false" serviceReferenceInstanceName=""></param>
+    </instance>
+  </service>
+ </iexServiceInstances>
+
+<iexServicesInstances>
+	<!--IEX0-->
+	<iex name="IEX_1">
+	
+		<!--IR-->
+    
+    <!--RCU IR
+		<instance service="IIR" implementation="StbService.SubSystems.IR">
+			<parameterValue value="12"/>
+			<parameterValue value="DTV_Universal"/>
+		</instance>
+    -->
+    <instance service="IIR" implementation="StbService.SubSystems.StbSimulatorIR">
+      <parameterValue value="DTV_Universal"/>
+    </instance>
+    
+
+
+    <!--power-->
+		<instance service="IPower" implementation="StbService.SubSystems.SerialRpc">
+			<parameterValue value="19"/>
+			<parameterValue value="1"/>
+		</instance>
+		
+		
+		<!--Robot-->
+		<instance service="IRobot" implementation="StbService.SubSystems.NewRobot">
+			<parameterValue value="1"/>
+		</instance>
+	
+	
+		<!--RF Switch - instance 1-->
+		<instance name="rfSwitch1" service="IRFSwitch" implementation="StbService.SubSystems.RFSwitch">
+			<parameterValue value="20"/>
+			<parameterValue value="8"/>
+			<parameterValue value="RFSwitch"/>
+		</instance>
+		<!--RF Switch - instance 2-->
+		<instance name="rfSwitch2" service="IRFSwitch" implementation="StbService.SubSystems.RFSwitch">
+			<parameterValue value="20"/>
+			<parameterValue value="7"/>
+			<parameterValue value="RFSwitch"/>
+		</instance>
+		
+		<!--DTMF-->
+		<instance service="IDTMF" implementation="StbService.SubSystems.DTMF">
+			<parameterValue value="14"/>
+		</instance>
+		
+		<!--Phone Switch - instance 1-->
+		<instance name="phoneSwitch1" service="IPhoneSwitch" implementation="StbService.SubSystems.PhoneSwitch">
+			<parameterValue value="16"/>
+		</instance>
+	</iex>
+	
+	<!--IEX1-->
+	<iex name="IEX_2">
+	
+	</iex>
+</iexServicesInstances>

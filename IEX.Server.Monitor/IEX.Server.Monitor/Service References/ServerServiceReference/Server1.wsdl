@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Server" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="WSHttpBinding_IServer_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="600000" />
+          <wsrm:AcknowledgementInterval Milliseconds="200" />
+        </wsrm:RMAssertion>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IPinger_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Interfaces" />
+      <xsd:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/IEX.Server.ServiceManagement" />
+      <xsd:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd5" namespace="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Core" />
+      <xsd:import schemaLocation="http://localhost:8732/IEX.ServerX/1?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/IEX.Utilities.Faults" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IServer_NotificationsReady_InputMessage">
+    <wsdl:part name="parameters" element="tns:NotificationsReady" />
+  </wsdl:message>
+  <wsdl:message name="IServer_NotificationsReady_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NotificationsReadyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetStringNotifications_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetStringNotifications" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetStringNotifications_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetStringNotificationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetIexServerErrorNotifications_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetIexServerErrorNotifications" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetIexServerErrorNotifications_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetIexServerErrorNotificationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetServerStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetServerStatus" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetServerStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetServerStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_Connect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Connect" />
+  </wsdl:message>
+  <wsdl:message name="IServer_Connect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_Connect_IexServerConnectionFaultFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Core" name="detail" element="q1:IexServerConnectionFault" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetExpectedBitmapsLocation_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetExpectedBitmapsLocation" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetExpectedBitmapsLocation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetExpectedBitmapsLocationResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_GetExpectedBitmapsLocation_IexServerConnectionFaultFault_FaultMessage">
+    <wsdl:part xmlns:q2="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Core" name="detail" element="q2:IexServerConnectionFault" />
+  </wsdl:message>
+  <wsdl:message name="IServer_ForceConnect_InputMessage">
+    <wsdl:part name="parameters" element="tns:ForceConnect" />
+  </wsdl:message>
+  <wsdl:message name="IServer_ForceConnect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ForceConnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_ForceConnect_IexServerConnectionFaultFault_FaultMessage">
+    <wsdl:part xmlns:q3="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Core" name="detail" element="q3:IexServerConnectionFault" />
+  </wsdl:message>
+  <wsdl:message name="IServer_Disconnect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Disconnect" />
+  </wsdl:message>
+  <wsdl:message name="IServer_Disconnect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DisconnectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IServer_Disconnect_IexServerConnectionFaultFault_FaultMessage">
+    <wsdl:part xmlns:q4="http://schemas.datacontract.org/2004/07/IEX.Server.WebServices.Core" name="detail" element="q4:IexServerConnectionFault" />
+  </wsdl:message>
+  <wsdl:message name="IPinger_Ping_InputMessage">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="IPinger_Ping_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:message name="IPinger_PingServerStatus_InputMessage">
+    <wsdl:part name="parameters" element="tns:PingServerStatus" />
+  </wsdl:message>
+  <wsdl:message name="IPinger_PingServerStatus_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PingServerStatusResponse" />
+  </wsdl:message>
+  <wsdl:portType msc:usingSession="true" name="IServer">
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="NotificationsReady">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILongPolling/NotificationsReady" message="tns:IServer_NotificationsReady_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILongPolling/NotificationsReadyResponse" message="tns:IServer_NotificationsReady_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetStringNotifications">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServer/GetStringNotifications" message="tns:IServer_GetStringNotifications_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServer/GetStringNotificationsResponse" message="tns:IServer_GetStringNotifications_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetIexServerErrorNotifications">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServer/GetIexServerErrorNotifications" message="tns:IServer_GetIexServerErrorNotifications_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServer/GetIexServerErrorNotificationsResponse" message="tns:IServer_GetIexServerErrorNotifications_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetServerStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServer/GetServerStatus" message="tns:IServer_GetServerStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServer/GetServerStatusResponse" message="tns:IServer_GetServerStatus_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Connect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServer/Connect" message="tns:IServer_Connect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServer/ConnectResponse" message="tns:IServer_Connect_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IServer/ConnectIexServerConnectionFaultFault" name="IexServerConnectionFaultFault" message="tns:IServer_Connect_IexServerConnectionFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="GetExpectedBitmapsLocation">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServer/GetExpectedBitmapsLocation" message="tns:IServer_GetExpectedBitmapsLocation_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServer/GetExpectedBitmapsLocationResponse" message="tns:IServer_GetExpectedBitmapsLocation_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IServer/GetExpectedBitmapsLocationIexServerConnectionFaultFault" name="IexServerConnectionFaultFault" message="tns:IServer_GetExpectedBitmapsLocation_IexServerConnectionFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="ForceConnect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServer/ForceConnect" message="tns:IServer_ForceConnect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServer/ForceConnectResponse" message="tns:IServer_ForceConnect_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IServer/ForceConnectIexServerConnectionFaultFault" name="IexServerConnectionFaultFault" message="tns:IServer_ForceConnect_IexServerConnectionFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation msc:isInitiating="true" msc:isTerminating="false" name="Disconnect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IServer/Disconnect" message="tns:IServer_Disconnect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IServer/DisconnectResponse" message="tns:IServer_Disconnect_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IServer/DisconnectIexServerConnectionFaultFault" name="IexServerConnectionFaultFault" message="tns:IServer_Disconnect_IexServerConnectionFaultFault_FaultMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType msc:usingSession="false" name="IPinger">
+    <wsdl:operation name="Ping">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPinger/Ping" message="tns:IPinger_Ping_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPinger/PingResponse" message="tns:IPinger_Ping_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PingServerStatus">
+      <wsdl:input wsaw:Action="http://tempuri.org/IPinger/PingServerStatus" message="tns:IPinger_PingServerStatus_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IPinger/PingServerStatusResponse" message="tns:IPinger_PingServerStatus_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WSHttpBinding_IServer" type="tns:IServer">
+    <wsp:PolicyReference URI="#WSHttpBinding_IServer_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="NotificationsReady">
+      <soap12:operation soapAction="http://tempuri.org/ILongPolling/NotificationsReady" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetStringNotifications">
+      <soap12:operation soapAction="http://tempuri.org/IServer/GetStringNotifications" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIexServerErrorNotifications">
+      <soap12:operation soapAction="http://tempuri.org/IServer/GetIexServerErrorNotifications" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetServerStatus">
+      <soap12:operation soapAction="http://tempuri.org/IServer/GetServerStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Connect">
+      <soap12:operation soapAction="http://tempuri.org/IServer/Connect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="IexServerConnectionFaultFault">
+        <soap12:fault use="literal" name="IexServerConnectionFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetExpectedBitmapsLocation">
+      <soap12:operation soapAction="http://tempuri.org/IServer/GetExpectedBitmapsLocation" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="IexServerConnectionFaultFault">
+        <soap12:fault use="literal" name="IexServerConnectionFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ForceConnect">
+      <soap12:operation soapAction="http://tempuri.org/IServer/ForceConnect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="IexServerConnectionFaultFault">
+        <soap12:fault use="literal" name="IexServerConnectionFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="Disconnect">
+      <soap12:operation soapAction="http://tempuri.org/IServer/Disconnect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="IexServerConnectionFaultFault">
+        <soap12:fault use="literal" name="IexServerConnectionFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WSHttpBinding_IPinger" type="tns:IPinger">
+    <wsp:PolicyReference URI="#WSHttpBinding_IPinger_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://tempuri.org/IPinger/Ping" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PingServerStatus">
+      <soap12:operation soapAction="http://tempuri.org/IPinger/PingServerStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Server">
+    <wsdl:port name="WSHttpBinding_IServer" binding="tns:WSHttpBinding_IServer">
+      <soap12:address location="http://localhost:8732/IEX.ServerX/Server/1/" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://localhost:8732/IEX.ServerX/Server/1/</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+    <wsdl:port name="WSHttpBinding_IPinger" binding="tns:WSHttpBinding_IPinger">
+      <soap12:address location="http://localhost:8732/IEX.ServerX/Pinger/1/" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://localhost:8732/IEX.ServerX/Pinger/1/</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

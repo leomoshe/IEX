@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="IexServerConfiguration"
+    targetNamespace="http://www.nds.com/iex"
+    elementFormDefault="qualified"
+    xmlns="http://www.nds.com/iex"
+    xmlns:mstns="http://www.nds.com/iex"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="IexLabXmlConfiguration" >
+    <xs:annotation>
+      <xs:documentation>Definition of the Iex lab configuration</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Server" type="ServerInfo" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element name="Group" type="GroupInfo" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="ConfigurationVersion" type="xs:string" />
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ServerInfo">
+    <xs:attribute name="Host" type="xs:string" />
+    <!--<xs:attribute name="ServerNumber" type="xs:int" />-->
+    <xs:attribute name="ServerNumber" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="GroupInfo">
+    <xs:sequence>
+      <xs:element name="Server" type="ServerInfo" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

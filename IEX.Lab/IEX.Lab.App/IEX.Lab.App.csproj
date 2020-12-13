@@ -1,0 +1,263 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C01A3858-6775-48C9-9484-CB9A116D810C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IEX.Lab.App</RootNamespace>
+    <AssemblyName>IEX.Lab.App</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;IEX_DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Lab.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DevExpress.BonusSkins.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.BonusSkins.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v12.2, Version=12.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.Data.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.ExpressApp.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.ExpressApp.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.ExpressApp.Win.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.ExpressApp.Win.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v12.2.Core, Version=12.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.Printing.v12.2.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v12.2.Core">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.RichEdit.v12.2.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v12.2, Version=12.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.Utils.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraBars.v12.2, Version=12.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraBars.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v12.2, Version=12.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraEditors.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraGrid.v12.2, Version=12.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraGrid.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraLayout.v12.2, Version=12.2.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraLayout.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraNavBar.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraNavBar.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraPrinting.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraPrinting.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraRichEdit.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraRichEdit.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraTreeList.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraVerticalGrid.v12.2">
+      <HintPath>..\..\BinaryDependencies\DevExpress\DevExpress.XtraVerticalGrid.v12.2.dll</HintPath>
+    </Reference>
+    <Reference Include="ExplorerControls, Version=4.7.3.46, Culture=neutral, PublicKeyToken=e1cd399f4fe1a8ad, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="SharpZipLib, Version=0.83.1.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73" />
+    <Reference Include="StructureMap, Version=2.4.9.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\BinaryDependencies\Framework\StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Controls\DockPanelCommandExecutor.cs" />
+    <Compile Include="Controls\NativeTreeViewCommandExecutor.cs" />
+    <Compile Include="Controls\IexComputersGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\frmHostDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\frmHostDialog.Designer.cs">
+      <DependentUpon>frmHostDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IexStb.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\IexStb.designer.cs">
+      <DependentUpon>IexStb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IexStbCollection.cs" />
+    <Compile Include="Controls\IexStbGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NativeTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\SimpleButtonCommandExecutor.cs" />
+    <Compile Include="Controls\IexStbCommandExecutor.cs" />
+    <Compile Include="Controls\SortingGrid.cs" />
+    <Compile Include="ViewModel\BindingServerView.cs" />
+    <Compile Include="ViewModel\ServerViewModel.cs" />
+    <Compile Include="ViewModel\HostViewModel.cs" />
+    <Compile Include="Views\Form\Data.cs" />
+    <Compile Include="Views\Form\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Form\frmMain.designer.cs">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Form\StreamViewer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Views\IexStbTemplate.cs" />
+    <Compile Include="Views\Shell\frmInstall.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Shell\frmInstall.designer.cs">
+      <DependentUpon>frmInstall.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shell\frmLab.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Shell\frmLab.Designer.cs">
+      <DependentUpon>frmLab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Shell\frmLab.Command.cs">
+      <DependentUpon>frmLab.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Infrastructure\Presenter.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Views\Shell\IShell.cs" />
+    <Compile Include="Views\Shell\ShellPresenter.cs" />
+    <Compile Include="Views\Shell\MRUList.cs" />
+    <Compile Include="Views\TreeNodeServerTemplate.cs" />
+    <EmbeddedResource Include="Controls\frmHostDialog.resx">
+      <DependentUpon>frmHostDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\IexStb.resx">
+      <DependentUpon>IexStb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Views\Form\frmMain.resx">
+      <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shell\frmInstall.resx">
+      <DependentUpon>frmInstall.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Shell\frmLab.resx">
+      <DependentUpon>frmLab.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\IEX.AutomaticInstallation\IEX.AutomaticInstaller\IEX.AutomaticInstaller.csproj">
+      <Project>{0AA85B39-5F8B-4BDC-A3ED-6CCEFA045780}</Project>
+      <Name>IEX.AutomaticInstaller</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.NetworkMediaSource\IEX.NetworkMediaSource.csproj">
+      <Project>{AF2427D3-3196-42AC-962A-2C7D5245DCBB}</Project>
+      <Name>IEX.NetworkMediaSource</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server\IEX.Server.Monitor\IEX.Server.Monitor.Client\IEX.Server.Monitor.Client.csproj">
+      <Project>{C051942A-6D96-4055-BA11-5843CEE8A5F2}</Project>
+      <Name>IEX.Server.Monitor.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Tracer\IEX.Tracer.csproj">
+      <Project>{58316FAE-92F5-41E6-8711-336282610C3A}</Project>
+      <Name>IEX.Tracer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Utilities\IEX.Utilities.csproj">
+      <Project>{4FF86296-0C0A-4C0C-BA4E-52DDBAC700D7}</Project>
+      <Name>IEX.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IEX.Lab.Client\IEX.Lab.Client.csproj">
+      <Project>{1CF7C887-45F3-4EE0-BCC1-17F42FA0CD78}</Project>
+      <Name>IEX.Lab.Client</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Wheel_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Lab.ico" />
+    <Content Include="Readme.txt" />
+    <None Include="Resources\Restart.png" />
+    <None Include="Resources\Start.png" />
+    <None Include="Resources\Install.png" />
+    <None Include="Resources\Stop.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

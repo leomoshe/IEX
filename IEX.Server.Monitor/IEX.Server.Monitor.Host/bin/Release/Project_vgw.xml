@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project Name="VGW">
+  <DiskSizeKb>1861644494</DiskSizeKb>
+  <NumberOfTuners>6</NumberOfTuners>
+  <UtcOffset>0</UtcOffset>
+  <SecondsBeforeRbRecordingStarts>10</SecondsBeforeRbRecordingStarts>
+  <CmdsAddress>http://10.63.124.3:5600</CmdsAddress>
+  <UpmAddress>http://10.63.124.2:6040</UpmAddress>
+  <PpsAddress>http://10.63.124.2:6060/devices/CPE_ID/planner/</PpsAddress>
+  <ScheduleDepth>14</ScheduleDepth>
+  <MaxNumberOfRecordings>1000</MaxNumberOfRecordings>
+  <MaxNumberOfBooking>1000</MaxNumberOfBooking><!--TBD to check requerments!-->
+  <MaxNumberOfReminders>0</MaxNumberOfReminders>
+  <KeepDefaultValue>false</KeepDefaultValue>
+  <LockDefaultValue>false</LockDefaultValue>
+  <DayLightSavingStart>2011-03-10T02:00:00</DayLightSavingStart>
+  <DayLightSavingEnd>2015-11-03T03:00:00</DayLightSavingEnd>
+  <MinimumLostBodyBeforePartialSeconds>121</MinimumLostBodyBeforePartialSeconds>
+  <MaxEventNamePartSize>300</MaxEventNamePartSize>
+  <MaxOverlappingRecordings>4</MaxOverlappingRecordings>
+  <GuardTimes>0 1 2 3 5 10 15 30 </GuardTimes>
+  <SingleGuardTime>120</SingleGuardTime>
+  <MinimumRecordingTimeSeconds>10</MinimumRecordingTimeSeconds>
+  <SubscribeAuthorizationId>10</SubscribeAuthorizationId>
+  <ConnectionTimeout>20000</ConnectionTimeout>
+  <!--<KvpData>
+        <KeyValuePair Key="Key1" Value="Value1">KeyValuePair1</KeyValuePair>
+        <KeyValuePair Key="Key2" Value="Value2">KeyValuePair2</KeyValuePair>
+        <KeyValuePair Key="Key3" Value="Value3">KeyValuePair3</KeyValuePair>
+        <KeyValueList Key="Key1">
+          <ValueItem Value="Value1" />
+          <ValueItem Value="Value2" />
+          <ValueItem Value="Value3" />
+        </KeyValueList>
+      </KvpData>-->
+</Project>

@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5258E9AA-1216-440A-B520-7E88C0693EC9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IEX.Server.Monitor.Host</RootNamespace>
+    <AssemblyName>IEX.Server.Monitor.Host</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;IEX_DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>1381_cog.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Alchemy, Version=2.2.0.238, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BinaryDependencies\Alchemy\Alchemy.dll</HintPath>
+    </Reference>
+    <Reference Include="IEX.Server.DLNAService">
+      <HintPath>..\..\IEX.Server.DLNAService\bin\Debug\IEX.Server.DLNAService.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Configuration.Install" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Manager.cs" />
+    <Compile Include="MonitorWindowsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools.cs" />
+    <Compile Include="WebSocketClientManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\IEX.Ocr\IEX.Ocr.csproj">
+      <Project>{7EA03FDA-7DA9-4617-B314-3BEC2C24FF1A}</Project>
+      <Name>IEX.Ocr</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IEX.TestFramework\IEX.TestFramework.Common\IEX.TestFramework.Common.csproj">
+      <Project>{2B000601-F133-43C5-B12C-979AE1F09579}</Project>
+      <Name>IEX.TestFramework.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IEX.TestFramework\IEX.TestFramework.Engine\IEX.TestFramework.Engine.csproj">
+      <Project>{BC59180E-8BC5-4F2B-8B16-0726C117BEFD}</Project>
+      <Name>IEX.TestFramework.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IEX.Tracer\IEX.Tracer.csproj">
+      <Project>{58316FAE-92F5-41E6-8711-336282610C3A}</Project>
+      <Name>IEX.Tracer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\IEX.Utilities\IEX.Utilities.csproj">
+      <Project>{4FF86296-0C0A-4C0C-BA4E-52DDBAC700D7}</Project>
+      <Name>IEX.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.CAService\IEX.Server.CAService.csproj">
+      <Project>{16DEBD25-337B-4833-BE9A-0DA8C3D1A8F6}</Project>
+      <Name>IEX.Server.CAService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.Debug.MilestonesEPG\IEX.Server.Debug.MilestonesEPG_New\IEX.Server.Debug.MilestonesEPG_New.csproj">
+      <Project>{F65B24F9-56CB-4501-A5D4-B8531876F6E8}</Project>
+      <Name>IEX.Server.Debug.MilestonesEPG_New</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.Debug\IEX.Server.Debug.csproj">
+      <Project>{F5E38578-D340-4469-A9B3-A82925EBC485}</Project>
+      <Name>IEX.Server.Debug</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.FrameGrabber\IEX.Server.FrameGrabber.csproj">
+      <Project>{50DC3E0C-C8B7-4BDF-BC0C-6E41F5E0FCB0}</Project>
+      <Name>IEX.Server.FrameGrabber</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.LegacyConfigurationAdapter\IEX.Server.LegacyConfigurationAdapter.csproj">
+      <Project>{3A3B4A53-666C-4D27-A42D-70489E695417}</Project>
+      <Name>IEX.Server.LegacyConfigurationAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.ServiceManagement\IEX.Server.ServiceManagement.csproj">
+      <Project>{DBEBB327-9F97-492B-A198-911BE092E2E4}</Project>
+      <Name>IEX.Server.ServiceManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.Services\IEX.Server.Services.csproj">
+      <Project>{A608D9DF-9A25-49A4-BD25-3C69942F10FA}</Project>
+      <Name>IEX.Server.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.SnifferService\IEX.Server.SnifferService\IEX.Server.SnifferService.csproj">
+      <Project>{FFDD09F8-106E-4770-AFDF-A0C8ADF5A5B1}</Project>
+      <Name>IEX.Server.SnifferService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.Server.VNC\IEX.Server.VNC.csproj">
+      <Project>{CA58F889-B6A3-432F-95BF-28A9A2851EC7}</Project>
+      <Name>IEX.Server.VNC</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\IEX.ServerX.Host\IEX.ServerX.Host.csproj">
+      <Project>{F90618FC-71B5-483F-9CB5-EBD39EA5D69D}</Project>
+      <Name>IEX.ServerX.Host</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\IEX.Server.Monitor\IEX.Server.Monitor.csproj">
+      <Project>{7C9683FE-F6C6-46B9-A6FD-257EEB326DCC}</Project>
+      <Name>IEX.Server.Monitor</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\IEX.Server.ServiceManagement\assemblies.txt">
+      <Link>assemblies.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="1381_cog.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

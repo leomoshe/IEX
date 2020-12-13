@@ -1,0 +1,1 @@
+"c:\Program Files\Microsoft SDKs\Windows\v7.1\Bin\NETFX 4.0 Tools\xsd.exe" "IexLabXmlConfiguration.xsd" /classes /namespace:"IEX.Lab.Client"

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?include ../../defines.wxi ?>
+
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Fragment Id='$(var.projectname)'>
+
+    <DirectoryRef Id="INSTALLDIR">
+
+      <Component Id="$(var.projectname)__" Guid='{C11AB523-45D5-4A56-9E58-4F8B1D0044E2}'>
+
+        <!-- DLL Files -->
+        <!-- monitor dll-->
+        <File
+          Id='IEX.Server.Monitor.dll'
+          Name='IEX.Server.Monitor.dll'
+          Source='IEX.Server.Monitor\bin\$(var.Configuration)\IEX.Server.Monitor.dll'
+          Vital='yes'/>
+
+        <!-- Exe files -->
+        <!-- monitor host-->
+        <File
+          Id='IEX.Server.Monitor.Host.exe'
+          Name='IEX.Server.Monitor.Host.exe'
+          Source='IEX.Server.Monitor.Host/bin/$(var.Configuration)/IEX.Server.Monitor.Host.exe'
+          Vital='yes'>
+          <Shortcut Id="MonitorStartupShorcut"
+                Arguments="/c"
+                Directory="StartupFolder"
+                Name="IexMonitor"
+                WorkingDirectory="INSTALLDIR"
+        />
+        </File>
+        <ServiceInstall  Id="MonitorServiceInstaller"
+          Type="ownProcess"
+          Vital="yes"
+          Name="IEX.Server.Monitor"
+          DisplayName="IEX Monitor Service"
+          Description="Monitoring and management service for IEX"
+          Start="demand"
+          Account="LocalSystem"
+          ErrorControl="ignore"
+          Interactive="no"
+        />
+        <ServiceControl Id="StartMonitorService"
+          Stop="both"
+          Remove="uninstall"
+          Name="IEX.Server.Monitor"
+          Wait="no"
+        />
+        <File
+              Id='IEX.Server.Monitor.Client.exe'
+              Name='IEX.Server.Monitor.Client.exe'
+              Source='IEX.Server.Monitor.Client/bin/$(var.Configuration)/IEX.Server.Monitor.Client.exe'
+              Vital='yes'/>
+        
+        <!-- Config files-->
+        <File
+          Id='IEX.Server.Monitor.Host.exe.config'
+          Name='IEX.Server.Monitor.Host.exe.config'
+          Source='IEX.Server.Monitor.Host/bin/$(var.Configuration)/IEX.Server.Monitor.Host.exe.config'
+          Vital='yes'/>
+        <File
+           Id='IEX.Server.Monitor.Client.exe.config'
+           Name='IEX.Server.Monitor.Client.exe.config'
+           Source='IEX.Server.Monitor.Client/bin/$(var.Configuration)/IEX.Server.Monitor.Client.exe.config'
+           Vital='yes'/>              	
+		<File
+			Id='Alchemy.dll'
+			Name='Alchemy.dll'
+			Source='$(var.bindepend_directory)/Alchemy/Alchemy.dll'
+			Vital='yes' />
+	  </Component>
+    </DirectoryRef>
+
+    <!-- Dependencies -->
+    <ComponentGroup Id='$(var.projectname)'>
+      <ComponentRef Id='$(var.projectname)__'/>
+    </ComponentGroup>
+
+  </Fragment>
+</Wix>

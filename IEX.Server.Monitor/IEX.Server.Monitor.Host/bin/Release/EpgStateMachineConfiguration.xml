@@ -1,0 +1,1686 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE EPG [
+  <!ELEMENT EPG (Configurations, EpgStates)>
+  <!ATTLIST EPG version CDATA #IMPLIED>
+  <!ELEMENT Configurations (StateTransisionTimeout,MenuTransisionTimeout, StateTransisionAnimationDuraiton, MenuTransisionAnimationDuraiton,RetryTimeout,RetriesCount)>
+  <!ELEMENT StateTransisionTimeout EMPTY>
+  <!ELEMENT MenuTransisionTimeout EMPTY>
+  <!ELEMENT StateTransisionAnimationDuraiton EMPTY>
+  <!ELEMENT MenuTransisionAnimationDuraiton EMPTY>
+  <!ELEMENT RetryTimeout EMPTY>
+  <!ELEMENT RetriesCount (#PCDATA)>
+  <!ATTLIST StateTransisionTimeout time CDATA #REQUIRED>
+  <!ATTLIST MenuTransisionTimeout time CDATA #REQUIRED>
+  <!ATTLIST StateTransisionAnimationDuraiton time CDATA #REQUIRED>
+  <!ATTLIST MenuTransisionAnimationDuraiton time CDATA #REQUIRED>
+  <!ATTLIST RetryTimeout time CDATA #REQUIRED>
+  <!ELEMENT EpgStates (State)*>
+  <!ELEMENT State (ActivationCriterias,DirectDestinations?, Menu?, Menus?) >
+  <!ATTLIST State name CDATA #REQUIRED>
+  <!ATTLIST State extraAnimationDuration CDATA #IMPLIED>
+  <!ATTLIST State xsi:type (DALSimpleMenuState|DALComplexMenuState) #IMPLIED>
+  <!ELEMENT ActivationCriterias (ActivationCriteria)*>
+  <!ELEMENT ActivationCriteria EMPTY>
+  <!ATTLIST ActivationCriteria key CDATA #REQUIRED>
+  <!ATTLIST ActivationCriteria value CDATA #REQUIRED>
+  <!ELEMENT DirectDestinations (DirectDestination)*>
+  <!ELEMENT DirectDestination (IrKey?, Delay?)>
+  <!ATTLIST DirectDestination name CDATA #REQUIRED>
+  <!ELEMENT IrKey EMPTY>
+  <!ATTLIST IrKey name CDATA #IMPLIED>
+  <!ATTLIST IrKey pressDuration CDATA #IMPLIED>
+  <!ELEMENT Delay EMPTY>
+  <!ATTLIST Delay time CDATA #IMPLIED>
+  <!ELEMENT Menu (Items)>
+  <!ELEMENT Items (Item)*>
+  <!ELEMENT Item EMPTY>
+  <!ATTLIST Item name CDATA #REQUIRED>
+  <!ATTLIST Item dictionaryKey CDATA #IMPLIED>
+  <!ATTLIST Item destination CDATA #IMPLIED>
+  <!ELEMENT Menus ANY>
+
+]>
+
+<EPG xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.6">
+  <Configurations>
+    <StateTransisionTimeout time="30" />
+    <MenuTransisionTimeout time="10" />
+    <StateTransisionAnimationDuraiton time="5" />
+    <MenuTransisionAnimationDuraiton time="2" />
+    <RetryTimeout time="600"/>
+    <RetriesCount>3</RetriesCount>
+  </Configurations>
+  <EpgStates>
+
+    <!--Dummy state representing the 'out of sync' state-->
+    <State name="UNKNOWN">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="unknownState" />
+      </ActivationCriterias>
+      <DirectDestinations />
+    </State>
+
+    <!--Live viewing-->
+    <State name="LIVE">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="IdleState" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="CHANNEL BAR">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+        <DirectDestination name="ACTION BAR">
+          <IrKey name="SELECT" />
+        </DirectDestination>
+        <DirectDestination name="TRICKMODE BAR">
+          <IrKey name="PAUSE" />
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!--Playback viewing-->
+    <State name="PLAYBACK">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="PlayBackIdleState" />
+        <ActivationCriteria key="scrnCtrl" value="ScreenCntrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="CHANNEL BAR">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+        <DirectDestination name="ACTION BAR">
+          <IrKey name="SELECT" />
+        </DirectDestination>
+        <DirectDestination name="TRICKMODE BAR">
+          <IrKey name="PAUSE" />
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!--Channel Bar-->
+    <State xsi:type="DALSimpleMenuState" name="CHANNEL BAR">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="ChBarState" />
+        <ActivationCriteria key="scrnCtrl" value="ChBarScreenCntrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="RightLeft" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="NOW" dictionaryKey="DIC_NOW" destination="LIVE"/>
+          <Item name="NEXT" dictionaryKey="DIC_NEXT" destination="ACTION BAR"/>
+        </Items>
+      </Menu>
+    </State>
+
+    <!--Zap Channel Bar (loads after 'back to live' from the player)-->
+    <State  xsi:type="DALSimpleMenuState" name="ZAP CHANNEL BAR">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="ZapTransState" />
+        <ActivationCriteria key="scrnCtrl" value="ChBarScreenCntrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="RightLeft" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="NOW" dictionaryKey="DIC_NOW" destination="LIVE"/>
+        </Items>
+      </Menu>
+    </State>
+
+    <!--Action Bar -> Record Event, depends on weather the event is part of a series. if not, only the top 2 appear. if hes, the 3 lower items appear-->
+    <State  xsi:type="DALSimpleMenuState" name="EVENT RECORDING">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="EventRecordingState" />
+        <ActivationCriteria key="scrnCtrl" value="ActionsMenuScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="CONFIRM" dictionaryKey="DIC_ACTION_LIST_RECORD_EVENT" destination="LIVE"/>
+          <Item name="MODIFY" dictionaryKey="DIC_LIBRARY_MODIFY_PARAMS" destination="LIVE"/>
+          <Item name="RECORD THIS EPISODE" dictionaryKey="DIC_ACTION_LIST_RECORD_SERIE_EVENT" destination="LIVE"/>
+          <Item name="RECORD ALL EPISODES" dictionaryKey="DIC_ACTION_LIST_RECORD_SERIE" destination="LIVE"/>
+        </Items>
+      </Menu>
+    </State>
+
+    <!--Action Bar-->
+    <State  xsi:type="DALSimpleMenuState" name="ACTION BAR">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="ProgramActionState" />
+        <ActivationCriteria key="scrnCtrl" value="ActionsMenuScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="SEARCH" dictionaryKey="DIC_PROG_ACTION_SEARCH" destination=""/>
+          <Item name="A//V SETTINGS" dictionaryKey="DIC_PROG_ACTION_FORMAT" destination="A//V SETTINGS"/>
+          <Item name="MORE LIKE THIS" dictionaryKey="DIC_STORE_RELATED" destination="MORE LIKE THIS"/>
+          <Item name="INFO" dictionaryKey="DIC_PROG_ACTION_SUMMARY" destination="INFO"/>
+          <Item name="PAUSE" dictionaryKey="DIC_PROG_ACTION_PAUSE" destination="TRICKMODE BAR"/>
+          <Item name="RECORD" dictionaryKey="DIC_PROG_ACTION_RECORD"  destination="EVENT RECORDING"/>
+          <Item name="STOP RECORDING" dictionaryKey="DIC_PROG_ACTION_CANCEL_RECORD"  destination=""/>
+          <Item name="PLAY" dictionaryKey="DIC_PROG_ACTION_PLAY" destination=""/>
+          <Item name="ADD REMINDER" dictionaryKey="DIC_PROG_ACTION_ADDTOFAVORITES" destination="CONFIRMATION"/>
+          <Item name="MAKE FAVOURITE" dictionaryKey="DIC_PROG_ACTION_ADDTOFAVORITES" destination="CONFIRMATION"/>
+          <Item name="BACK TO LIVE TV" dictionaryKey="DIC_PROG_ACTION_BACK_TO_LIVE" destination=""/>
+        </Items>
+      </Menu>
+    </State>
+
+    <!--ACTION BAR -> MORE LIKE THIS-->
+    <State name="MORE LIKE THIS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="ContentListingState" />
+        <ActivationCriteria key="scrnCtrl" value="ContentListingScreenCntrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="ACTION BAR">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+    
+    <!--ACTION BAR -> INFO-->    
+    <State name="INFO">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SummaryState" />
+        <ActivationCriteria key="scrnCtrl" value="ActionsMenuScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="ACTION BAR">
+          <IrKey name="RETOUR" />
+        </DirectDestination>      
+      </DirectDestinations>
+    </State>
+
+    <!--ACTION BAR -> A/V SETTINGS-->
+    <State  xsi:type="DALSimpleMenuState" name="A//V SETTINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="FormatSelectionState" />
+        <ActivationCriteria key="scrnCtrl" value="ActionsMenuScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="ACTION BAR">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="SUBTITLES" dictionaryKey="DIC_PROG_ACTION_SUBTITLE" destination="SUBTITLES SELECTION"/>        
+        </Items>
+      </Menu>
+    </State>
+
+    <!--ACTION BAR -> A/V SETTINGS -> SUBTITLES SELECTION-->
+    <State  xsi:type="DALSimpleMenuState" name="SUBTITLES SELECTION">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SubtitleSelectionState" />
+        <ActivationCriteria key="scrnCtrl" value="ActionsMenuScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="A//V SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="NonCircular" selectionIdentifier="title">
+        <Items>
+          <Item name="OFF" dictionaryKey="DIC_SETTINGS_OPTION_OFF" destination="LIVE"/>
+          <Item name="DEUTSCH" dictionaryKey="DIC_SETTINGS_OPTION_OFF" destination="LIVE"/>
+        </Items>
+      </Menu>
+    </State>
+    
+    <!--Add to-->
+    <State name="CONFIRMATION">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="ConfirmationState" />
+        <ActivationCriteria key="scrnCtrl" value="ActionsMenuScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="LIVE">
+          <Delay time="1"/>
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+
+    <!--MAIN MENU-->
+    <State xsi:type="DALSimpleMenuState" name="MAIN MENU" extraAnimationDuration="3">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="MainMenuTran" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="LIVE">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="RightLeft" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="CHANNELS" dictionaryKey="DIC_MAIN_MENU_ON_NOW" destination="LIVE" />
+          <Item name="NON EXISTING" dictionaryKey="" destination="" />
+          <!--<Item name="SUGGESTED" dictionaryKey="SUGGESTED" isPopup="false" destination="" />-->
+          <Item name="TV GUIDE" dictionaryKey="DIC_MAIN_MENU_GUIDE" destination="TV GUIDE FILTER" />
+
+          <Item name="SEARCH" dictionaryKey="DIC_MAIN_MENU_SEARCH" isPopup="true" >
+            <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+              <Items>
+                <Item name="KEYWORD" dictionaryKey="DIC_MAIN_MENU_KEYWORD" destination="KEYWORD" />
+                <Item name="MORE OPTIONS" dictionaryKey="DIC_MAIN_MENU_ADVANCED" destination="MORE OPTIONS" />
+              </Items>
+            </Menu>
+          </Item>
+
+          <Item name="TOOLBOX" dictionaryKey="DIC_MAIN_MENU_TOOLBOX" isPopup="true">
+            <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+              <Items>
+                <Item name="SETTINGS" dictionaryKey="DIC_MAIN_MENU_SETTINGS" destination="SETTINGS" />
+                <Item name="CUSTOMER CARE" dictionaryKey="DIC_MAIN_MENU_UPC_CUSTOMER_CARE" destination="CUSTOMER CARE" />
+              </Items>
+            </Menu>
+          </Item>
+          <Item name="STORE" dictionaryKey="DIC_MAIN_MENU_STORE" destination="STORE ERROR" />
+          <Item name="MY LIBRARY" dictionaryKey="DIC_MAIN_MENU_MY_LIB" destination="MY LIBRARY" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!--MAIN MENU -> STORE -> STORE ERROR-->
+    <State name="STORE ERROR">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="AuxAppState" />
+        <ActivationCriteria key="scrnCtrl" value="StoreErrorScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!--MAIN MENU -> SEARCH -> KEYWORD-->
+    <State name="KEYWORD">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="KeywordSearchState" />
+        <ActivationCriteria key="scrnCtrl" value="KeywordSearch" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!-- MAIN MENU -> SEARCH -> MORE OPTIONS -->
+    <State xsi:type="DALSimpleMenuState" name="MORE OPTIONS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value=" AdvancedSearchState" />
+        <ActivationCriteria key="scrnCtrl" value="AdvancedSearch" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="KEYWORD" DictionaryKey="DIC_KEYWORD" destination=""/>
+          <Item name="GENRE" dictionaryKey="DIC_ADV_SEARCH_CRITERIA_GENRE" destination=""/>
+          <Item name="CHANNEL" dictionaryKey="DIC_ADV_SEARCH_CRITERIA_CHANNEL" destination="" />
+          <Item name="DAY" dictionaryKey ="DIC_ADV_SEARCH_CRITERIA_DAY" destination="" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- CUSTOMER CARE -->
+    <State xsi:type="DALSimpleMenuState" name="CUSTOMER CARE">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="CCareFaqCategoryState" />
+        <ActivationCriteria key="scrnCtrl" value="CCareFaqCategoryScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="HORIZON ASSISTANT" DictionaryKey="DIC_CUSTOMER_CARE_FAQ" destination=""/>
+          <Item name="ACCOUNT ASSISTANT" dictionaryKey="DIC_BILL_ON_TV" destination=""/>
+          <Item name="CONNECTION ASSISTANT" dictionaryKey="DIC_CONNECTION_TEST" destination="CONNECTION ASSISTANT" />
+          <Item name="CONTACT US" dictionaryKey ="DIC_CONTACT_US" destination="CONTACT US" />
+        </Items>
+      </Menu>
+    </State>
+
+
+    <!-- CUSTOMER CARE -> CONTACT US -->
+    <State xsi:type="DALSimpleMenuState" name="CONTACT US">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="CCareContactUsState" />
+        <ActivationCriteria key="scrnCtrl" value="CCareContactUsCtrl" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="CUSTOMER CARE">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="HELP &amp; INFO" DictionaryKey="DIC_MORE_QA" destination=""/>
+          <Item name="JOIN US" dictionaryKey="DIC_JOIN_US" destination=""/>
+          <Item name="CALL US" dictionaryKey="DIC_CALL_US" destination="" />
+          <Item name="MAIL US" dictionaryKey ="DIC_MAIL_US" destination="" />
+          <Item name="CHAT WITH US" dictionaryKey ="DIC_CHAT_WITH_US" destination="" />
+          <Item name="WRITE TO US" dictionaryKey ="DIC_WRITE_US" destination="" />
+          <Item name="TWEET US" dictionaryKey ="DIC_TWEET_US" destination="" />
+          <Item name="VISIT US" dictionaryKey ="DIC_VISIT_US" destination="" />
+        </Items>
+      </Menu>
+    </State>
+
+
+    <!-- CUSTOMER CARE ->  CONNECTION ASSISTANT-->
+    <State xsi:type="DALSimpleMenuState" name="CONNECTION ASSISTANT">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="CCareTestingState" />
+        <ActivationCriteria key="scrnCtrl" value="CCarePerformTestCtrl" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="CUSTOMER CARE">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="NonCircular" selectionIdentifier="title">
+        <Items>
+          <Item name="YES" DictionaryKey="DIC_SETTINGS_OPTION_YES" destination=""/>
+          <Item name="NO" dictionaryKey="DIC_SETTINGS_OPTION_NO" destination="CUSTOMER CARE"/>         
+        </Items>
+      </Menu>
+    </State>
+
+
+    <!--      SETTINGS          -->
+
+    <!-- Settings - maim menu -->
+    <State xsi:type="DALSimpleMenuState" name="SETTINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="SETTINGSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="HORIZON BOX" dictionaryKey="DIC_SETTINGS_BOX_SET_UP" destination="HORIZON BOX"/>
+          <Item name="TELEVISION" dictionaryKey="DIC_SETTINGS_TV_SETTINGS" destination="TELEVISION"/>
+          <Item name="PIN &amp; PARENTAL CONTROL" dictionaryKey="DIC_SETTINGS_PIN_AND_PC" destination="PIN &amp; PARENTAL CONTROL" />
+          <Item name="RECORDINGS &amp; REMINDERS" dictionaryKey ="DIC_SETTINGS_DVR_AND_REMINDERS" destination="REC AND REM" />
+          <Item name="PREFERENCES" dictionaryKey="DIC_SETTINGS_USER_PREF" destination="PREFERENCES" />
+          <Item name="HOME NETWORK" dictionaryKey="DIC_SETTINGS_HOME_NETWORK" destination="" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> HORIZON BOX -->
+    <State xsi:type="DALSimpleMenuState" name="HORIZON BOX">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="HORIZON BOXScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="POWER MANAGEMENT" dictionaryKey ="DIC_SETTINGS_POWER_MNGMNT" destination="" />
+          <Item name="SOFTWARE" dictionaryKey ="DIC_BOX_INFORMATION" destination="" />
+          <Item name="FACTORY RESET" dictionaryKey ="DIC_SETTINGS_FACTORY_RESET" destination="ENTER PIN" />
+          <Item name="ADD REMOTE CONTROL" dictionaryKey ="DIC_SETTINGS_ADD_RC" destination="" />
+          <Item name="FRONT PANEL BRIGHTNESS" dictionaryKey ="DIC_SETTING_FRONT_PANEL_BRIGHT" destination="" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -->
+    <State xsi:type="DALSimpleMenuState" name="TELEVISION">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="TELEVISIONScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="VIDEO SETTINGS" dictionaryKey ="DIC_SETTINGS_VIDEO_FORMAT" destination="VIDEO SETTINGS" />
+          <Item name="AUDIO SETTINGS" dictionaryKey ="DIC_SETTINGS_AUDIO_FORMAT" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> VIDEO SETTINGS -->
+    <State xsi:type="DALSimpleMenuState" name="VIDEO SETTINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="VIDEO SETTINGSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="TELEVISION">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="MAIN VIDEO CONNECTION" dictionaryKey ="DIC_SETTINGS_VIDEO_OUTPUT" destination="MAIN VIDEO CONNECTION" />
+          <Item name="TV SET INFO" dictionaryKey ="DIC_SETTINGS_DIAGNOSTICS_TV" destination="TV SET INFO" />
+          <Item name="HDMI RESOLUTION" dictionaryKey ="DIC_SETTINGS_HD_RESOLUTION" destination="HDMI RESOLUTION" />
+          <Item name="4:3 VIDEO DISPLAY" dictionaryKey ="DIC_SETTINGS_TV_FORMAT" destination="4:3 VIDEO DISPLAY" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> VIDEO SETTINGS -> MAIN VIDEO CONNECTION -->
+    <State xsi:type="DALSimpleMenuState" name="MAIN VIDEO CONNECTION">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="MAIN VIDEO CONNECTIONScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="VIDEO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="AUTOMATIC SELECTION" dictionaryKey ="DIC_SETTINGS_VIDEO_OUTPUT" destination="VIDEO SETTINGS" />
+          <Item name="HDMI" dictionaryKey ="DIC_SETTINGS_DIAGNOSTICS_TV" destination="VIDEO SETTINGS" />
+          <Item name="SCART" dictionaryKey ="DIC_SETTINGS_HD_RESOLUTION" destination="VIDEO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!--Settings -> TELEVISION -> VIDEO SETTINGS -> TV SET INFO->  -->
+    <State name="TV SET INFO">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="TV SET INFOScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="VIDEO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!-- Settings -> TELEVISION -> VIDEO SETTINGS -> HDMI RESOLUTION -->
+    <State xsi:type="DALSimpleMenuState" name="HDMI RESOLUTION">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="HDMI RESOLUTIONScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="VIDEO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="FOLLOW TV RESOLUTION" dictionaryKey ="DIC_SETTINGS_HD_FORMAT_TV_PREFERRED" destination="VIDEO SETTINGS" />
+          <Item name="AUTOMATIC SELECTION" dictionaryKey ="DIC_VIDEO_OUTPUT_AUTO" destination="VIDEO SETTINGS" />
+          <Item name="1080p" dictionaryKey ="DIC_SETTINGS_HD_FORMAT_1080P" destination="VIDEO SETTINGS" />
+          <Item name="1080i" dictionaryKey ="DIC_SETTINGS_HD_FORMAT_1080I" destination="VIDEO SETTINGS" />
+          <Item name="720p" dictionaryKey ="DIC_SETTINGS_HD_FORMAT_720P" destination="VIDEO SETTINGS" />
+          <Item name="576p" dictionaryKey ="DIC_SETTINGS_HD_FORMAT_576P" destination="VIDEO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> VIDEO SETTINGS -> 4:3 VIDEO DISPLAY -->
+    <State xsi:type="DALSimpleMenuState" name="4:3 VIDEO DISPLAY">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="4:3 VIDEO DISPLAYScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="VIDEO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="PILLARBOX" dictionaryKey ="DIC_SETTINGS_TV_FORMAT_PILLAR_BOX" destination="VIDEO SETTINGS" />
+          <Item name="FULLSCREEN (ZOOM)" dictionaryKey ="DIC_SETTINGS_TV_FORMAT_ZOOM" destination="VIDEO SETTINGS" />
+          <Item name="FULLSCREEN (STRETCH)" dictionaryKey ="DIC_SETTINGS_TV_FORMAT_FULL_SCREEN" destination="VIDEO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -->
+    <State xsi:type="DALSimpleMenuState" name="AUDIO SETTINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="AUDIO SETTINGSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="TELEVISION">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="SCART OUTPUT" dictionaryKey ="DIC_ANA_AUDIO_SCART" destination="SCART OUTPUT" />
+          <Item name="HDMI OUTPUT" dictionaryKey ="DIC_SETTINGS_HDMI_AUDIO_OUTPUT" destination="HDMI OUTPUT" />
+          <Item name="S//PDIF OUTPUT" dictionaryKey ="DIC_SETTINGS_SPDIF_AUDIO_OUTPUT" destination="S//PDIF OUTPUT" />
+          <Item name="DOLBY (AC3) OUTPUT" dictionaryKey ="DIC_DOLBY_OUTPUT" destination="DOLBY (AC3) OUTPUT" />
+          <Item name="S//PDIF AUDIO DELAY" dictionaryKey ="DIC_SETTINGS_SPDIF_AUDIO_DELAY" destination="S//PDIF AUDIO DELAY" />
+          <Item name="HDMI AUDIO DELAY" dictionaryKey ="DIC_HDMI_AUDIO_DELAY" destination="HDMI AUDIO DELAY" />
+          <Item name="RESET LANGUAGE SETTINGS" dictionaryKey ="DIC_SETTINGS_RESET_SOUNDTRACK_SETTINGS" destination="RESET LANGUAGE SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -> SCART OUTPUT -->
+    <State xsi:type="DALSimpleMenuState" name="SCART OUTPUT">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="SCART OUTPUTScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="AUDIO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ENABLE" dictionaryKey ="DIC_SETTINGS_ENABLED" destination="AUDIO SETTINGS" />
+          <Item name="DISABLED" dictionaryKey ="DIC_SETTINGS_DISABLED" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -> HDMI OUTPUT -->
+    <State xsi:type="DALSimpleMenuState" name="HDMI OUTPUT">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="HDMI OUTPUTScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="AUDIO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ENABLE" dictionaryKey ="DIC_SETTINGS_ENABLED" destination="AUDIO SETTINGS" />
+          <Item name="DISABLED" dictionaryKey ="DIC_SETTINGS_DISABLED" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -> S//PDIF OUTPUT -->
+    <State xsi:type="DALSimpleMenuState" name="S//PDIF OUTPUT">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="S/PDIF OUTPUTScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="AUDIO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ENABLE" dictionaryKey ="DIC_SETTINGS_ENABLED" destination="AUDIO SETTINGS" />
+          <Item name="DISABLED" dictionaryKey ="DIC_SETTINGS_DISABLED" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -> DOLBY (AC3) OUTPUT -->
+    <State xsi:type="DALSimpleMenuState" name="DOLBY (AC3) OUTPUT">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="DOLBY (AC3) OUTPUTScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="AUDIO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ENABLE" dictionaryKey ="DIC_SETTINGS_ENABLED" destination="AUDIO SETTINGS" />
+          <Item name="DISABLED" dictionaryKey ="DIC_SETTINGS_DISABLED" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -> S//PDIF AUDIO DELAY -->
+    <State xsi:type="DALSimpleMenuState" name="S//PDIF AUDIO DELAY">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="S/PDIF AUDIO DELAYScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="AUDIO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="RightLeft" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="-50 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="0" dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="-200 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="-150 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="-100 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -> HDMI AUDIO DELAY -->
+    <State xsi:type="DALSimpleMenuState" name="HDMI AUDIO DELAY">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="HDMI AUDIO DELAYScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="AUDIO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="RightLeft" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="-50 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="0" dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="-200 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="-150 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+          <Item name="-100 ms." dictionaryKey ="" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> TELEVISION -> AUDIO SETTINGS -> RESET LANGUAGE SETTINGS -->
+    <State xsi:type="DALSimpleMenuState" name="RESET LANGUAGE SETTINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="RESET LANGUAGE SETTINGSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="AUDIO SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="YES" dictionaryKey ="DIC_SETTINGS_OPTION_YES" destination="AUDIO SETTINGS" />
+          <Item name="NO" dictionaryKey ="DIC_SETTINGS_OPTION_NO" destination="AUDIO SETTINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+
+    <!-- Settings -> PIN & PARENTAL CONTROL -->
+    <State xsi:type="DALSimpleMenuState" name="PIN &amp; PARENTAL CONTROL">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="PIN &amp; PARENTAL CONTROLScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="MASTER PIN" dictionaryKey="DIC_SETTINGS_MASTER_PIN"  destination="MASTER PIN" />
+          <Item name="PURCHASE PROTECTION" dictionaryKey="DIC_PURCHASE_PROTECTION"  destination="PURCHASE PROTECTION" />
+          <Item name="PARENTAL CONTROL" dictionaryKey="DIC_SETTINGS_PARENTAL"  destination="PARENTAL CONTROL" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PIN & PARENTAL CONTROL -> MASTER PIN -->
+    <State xsi:type="DALSimpleMenuState" name="MASTER PIN">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="MASTER PINScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PIN &amp; PARENTAL CONTROL">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="CHANGE MASTER PIN" dictionaryKey="DIC_SETTINGS_CHANGE_MASTERPIN"  destination="CHANGE MASTER PIN" />
+          <Item name="REQUIRE PIN ENTRY" dictionaryKey="DIC_SETTINGS_ACTIVATE_MASTERPIN"  destination="" />
+          <Item name="REQUIRE PIN AT STARTUP" dictionaryKey="DIC_SETTINGS_ACTIVATE_STARTUP_PROTECTION"  destination="" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PIN & PARENTAL CONTROL -> MASTER PIN -> CHANGE MASTER PIN -->
+    <State xsi:type="DALSimpleMenuState" name="CHANGE MASTER PIN">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="CHANGE MASTER PINScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="MASTER PIN">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="RightLeft" type="Circular" selectionIdentifier="title">
+        <Items>
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PIN & PARENTAL CONTROL -> PURCHASE PROTECTION -->
+    <State xsi:type="DALSimpleMenuState" name="PURCHASE PROTECTION">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="PURCHASE PROTECTIONScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PIN &amp; PARENTAL CONTROL">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ON" dictionaryKey="DIC_SETTINGS_CHANGE_MASTERPIN"  destination="PIN &amp; PARENTAL CONTROL" />
+          <Item name="OFF" dictionaryKey="DIC_SETTINGS_ACTIVATE_MASTERPIN"  destination="PIN &amp; PARENTAL CONTROL" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PIN & PARENTAL CONTROL -> PARENTAL CONTROL-->
+    <State xsi:type="DALSimpleMenuState" name="PARENTAL CONTROL">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="PARENTAL CONTROLScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PIN &amp; PARENTAL CONTROL">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="LOCK//UNLOCK CHANNELS" dictionaryKey="DIC_SETTINGS_PARENTAL_LOCK_CHANNEL"  destination="LOCK//UNLOCK CHANNELS" />
+          <Item name="LOCK PROGRAMMES BY AGE RATING" dictionaryKey="DIC_SETTINGS_PARENTAL_AGE_RATING"  destination="ENTER PIN" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PIN & PARENTAL CONTROL -> PARENTAL CONTROL -> ENTER PIN -->
+    <State xsi:type="DALSimpleMenuState" name="ENTER PIN">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsPinCodeState" />
+        <ActivationCriteria key="scrnCtrl" value="SettingsPinCodeScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PARENTAL CONTROL">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PIN & PARENTAL CONTROL -> PARENTAL CONTROL LOCK//UNLOCK CHANNELS-->
+    <State xsi:type="DALSimpleMenuState" name="LOCK//UNLOCK CHANNELS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="LOCK/UNLOCK CHANNELSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PIN &amp; PARENTAL CONTROL">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+        </Items>
+      </Menu>
+    </State>
+
+
+    <!-- Settings -> Recordings & Reminders -->
+    <State xsi:type="DALSimpleMenuState" name="REC AND REM">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="RECORDINGS &amp; REMINDERSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="RECORDINGS" dictionaryKey="DIC_SETTINGS_DVR"  destination="RECORDINGS" />
+          <Item name="REMINDER NOTIFICATION" dictionaryKey="DIC_SETTINGS_REMINDERS"  destination="REMINDER NOTIFICATION"/>
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> Recordings & Reminders -> Recordings -->
+    <State xsi:type="DALSimpleMenuState" name="RECORDINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="RECORDINGSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="REC AND REM">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="EXTRA TIME BEFORE PROGRAMME" dictionaryKey="DIC_SETTINGS_SGT"  destination="EXTRA TIME BEFORE PROGRAMME" />
+          <Item name="EXTRA TIME AFTER PROGRAMME" dictionaryKey="DIC_SETTINGS_EGT"  destination="EXTRA TIME AFTER PROGRAMME" />
+          <Item name="DISK SPACE MANAGEMENT" dictionaryKey="DIC_SETTINGS_DISK_SPACE_MNGMNT" destination="" />
+          <Item name="USED DISK SPACE" dictionaryKey="DIC_SETTINGS_OCCUPIED_DISK_SPACE" destination=""/>
+          <Item name="SERIES RECORDING" dictionaryKey="DIC_SETTINGS_DVR_REMINDER_SERIES"  destination="" />
+          <Item name="VIDEO SKIP FORWARD" dictionaryKey="DIC_SETTINGS_SKIP_FWD_INTERVAL"  destination="VIDEO SKIP FORWARD"/>
+          <Item name="VIDEO SKIP BACKWARD" dictionaryKey="DIC_SETTINGS_SKIP_BACK_INTERVAL"  destination="VIDEO SKIP BACKWARD"/>
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> Recordings & Reminders -> Reminder notification -->
+    <State xsi:type="DALSimpleMenuState" name="REMINDER NOTIFICATION">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="REMINDER NOTIFICATIONScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="REC AND REM">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ON" dictionaryKey="DIC_SETTINGS_OPTION_ON"  destination="REC AND REM" />
+          <Item name="OFF" dictionaryKey="DIC_SETTINGS_OPTION_OFF"  destination="REC AND REM"/>
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> Recordings & Reminders -> Recordings -> EXTRA TIME BEFORE PROGRAMME -->
+    <State xsi:type="DALSimpleMenuState" name="EXTRA TIME BEFORE PROGRAMME">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="EXTRA TIME BEFORE PROGRAMMEScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="RECORDINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="AUTOMATIC" dictionaryKey="DIC_GUARD_TIME_AUTO"  destination="RECORDINGS" />
+          <Item name="NONE" dictionaryKey="DIC_GUARD_TIME_0"  destination="RECORDINGS" />
+          <Item name="1 min." dictionaryKey="DIC_GUARD_TIME_1"  destination="RECORDINGS" />
+          <Item name="2 min." dictionaryKey="DIC_GUARD_TIME_2"  destination="RECORDINGS"/>
+          <Item name="5 min." dictionaryKey="DIC_GUARD_TIME_5"  destination="RECORDINGS" />
+          <Item name="15 min." dictionaryKey="DIC_GUARD_TIME_15"  destination="RECORDINGS" />
+          <Item name="30 min." dictionaryKey="DIC_GUARD_TIME_30"  destination="RECORDINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> Recordings & Reminders -> Recordings -> EXTRA TIME AFTER PROGRAMME -->
+    <State xsi:type="DALSimpleMenuState" name="EXTRA TIME AFTER PROGRAMME">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="EXTRA TIME AFTER PROGRAMMEScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="RECORDINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="AUTOMATIC" dictionaryKey="DIC_GUARD_TIME_AUTO"  destination="RECORDINGS" />
+          <Item name="NONE" dictionaryKey="DIC_GUARD_TIME_0"  destination="RECORDINGS" />
+          <Item name="1 min." dictionaryKey="DIC_GUARD_TIME_1"  destination="RECORDINGS" />
+          <Item name="2 min." dictionaryKey="DIC_GUARD_TIME_2"  destination="RECORDINGS"/>
+          <Item name="5 min." dictionaryKey="DIC_GUARD_TIME_5"  destination="RECORDINGS" />
+          <Item name="15 min." dictionaryKey="DIC_GUARD_TIME_15"  destination="RECORDINGS" />
+          <Item name="30 min." dictionaryKey="DIC_GUARD_TIME_30"  destination="RECORDINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> Recordings & Reminders -> Recordings -> VIDEO SKIP FORWARD -->
+    <State xsi:type="DALSimpleMenuState" name="VIDEO SKIP FORWARD">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="VIDEO SKIP FORWARDScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="RECORDINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="+60 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="+300 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="+600 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="BOOKMARK MODE" dictionaryKey=""  destination="RECORDINGS"/>
+          <Item name="+10 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="+30 sec." dictionaryKey=""  destination="RECORDINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> Recordings & Reminders -> Recordings -> VIDEO SKIP BACKWARD -->
+    <State xsi:type="DALSimpleMenuState" name="VIDEO SKIP BACKWARD">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="VIDEO SKIP BACKWARDScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="RECORDINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="-60 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="-300 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="-600 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="BOOKMARK MODE" dictionaryKey=""  destination="RECORDINGS"/>
+          <Item name="-10 sec." dictionaryKey=""  destination="RECORDINGS" />
+          <Item name="-30 sec." dictionaryKey=""  destination="RECORDINGS" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PREFERENCES -->
+    <State xsi:type="DALSimpleMenuState" name="PREFERENCES">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="PREFERENCESScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="SETTINGS">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="GENERAL" dictionaryKey="DIC_SETTINGS_GENERAL"  destination="GENERAL" />
+          <Item name="FAVOURITE CHANNELS" dictionaryKey="DIC_SETTINGS_FAVOURITES"  destination="FAVOURITE CHANNELS" />
+          <Item name="SOUNDTRACK LANGUAGE" dictionaryKey="DIC_SETTINGS_AUDIO_PREF"  destination="SOUNDTRACK LANGUAGE" />
+          <Item name="SUBTITLES" dictionaryKey="DIC_SETTINGS_SUBTITLES"  destination="SUBTITLES" />
+          <Item name="TELETEXT DISPLAY" dictionaryKey="DIC_TELETEXT_PAGES_DISPLAY"  destination="" />
+          <Item name="PERSONALISATION" dictionaryKey="DIC_PERSONALISATION_SETTINGS"  destination="" />
+        </Items>
+      </Menu>
+    </State>
+	
+	<!-- Settings -> PREFERENCES -> SOUNDTRACK LANGUAGE -->
+    <State xsi:type="DALSimpleMenuState" name="SOUNDTRACK LANGUAGE">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="SOUNDTRACK LANGUAGEScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PREFERENCES">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="SOUNDTRACK LANGUAGE LEAF" dictionaryKey="DIC_SETTINGS_AUDIO_LANGUAGE"  destination="SOUNDTRACK LANGUAGE LEAF" />
+          <Item name="RESET LANGUAGE SETTINGS" dictionaryKey="DIC_SETTINGS_RESET_SOUNDTRACK_SETTINGS"  destination="" />       
+        </Items>
+      </Menu>
+    </State>
+	
+	<!-- Settings -> PREFERENCES -> SOUNDTRACK LANGUAGE  -> SOUNDTRACK LANGUAGE LEAF-->
+    <State xsi:type="DALSimpleMenuState" name="SOUNDTRACK LANGUAGE LEAF">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="SOUNDTRACK LANGUAGEScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PREFERENCES">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="FRANÇAIS" dictionaryKey=""  destination="SOUNDTRACK LANGUAGE" />
+          <Item name="ENGLISH" dictionaryKey=""  destination="SOUNDTRACK LANGUAGE" />       
+        </Items>
+      </Menu>
+    </State>
+	
+
+    <!-- Settings -> PREFERENCES -> GENERAL-->
+    <State xsi:type="DALSimpleMenuState" name="GENERAL">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="GENERALScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PREFERENCES">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="MENU LANGUAGE" dictionaryKey="DIC_SETTINGS_MENU_LANGUAGE"  destination="" />
+          <Item name="TRANSPARENCY" dictionaryKey="DIC_SETTINGS_TRANSPARENCY"  destination="" />
+          <Item name="CHANNEL BAR TIME OUT" dictionaryKey="DIC_SETTINGS_BANNER_DISPLAY"  destination="CHANNEL BAR TIME OUT" />
+          <Item name="TV GUIDE BACKGROUND" dictionaryKey="DIC_SETTINGS_TV_GUIDE_UI"  destination="" />
+          <Item name="START CHANNEL" dictionaryKey="DIC_SETTINGS_DEFAULT_CHANNEL"  destination="" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PREFERENCES -> FAVOURITE CHANNELS-->
+    <State xsi:type="DALSimpleMenuState" name="FAVOURITE CHANNELS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="FAVOURITE CHANNELSScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PREFERENCES">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="SET FAVOURITES" dictionaryKey="DIC_SETTINGS_SELECT_CHANNEL"  destination="SET FAVOURITES" />
+          <Item name="REORDER FAVOURITES" dictionaryKey="DIC_SETTINGS_REORDER_LIST"  destination="REORDER FAVOURITES" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PREFERENCES -> FAVOURITE CHANNELS -> SET FAVOURITES -->
+    <State xsi:type="DALSimpleMenuState" name="SET FAVOURITES">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="SET FAVOURITESScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PREFERENCES">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PREFERENCES -> FAVOURITE CHANNELS -> REORDER FAVOURITES -->
+    <State xsi:type="DALSimpleMenuState" name="REORDER FAVOURITES">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="REORDER FAVOURITESScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="PREFERENCES">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PREFERENCES -> GENERAL -> CHANNEL BAR TIME OUT-->
+    <State xsi:type="DALSimpleMenuState" name="CHANNEL BAR TIME OUT">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="INFO MENU TIME OUTScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="GENERAL">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="7 sec." dictionaryKey=""  destination="GENERAL" />
+          <Item name="10 sec." dictionaryKey=""  destination="GENERAL" />
+          <Item name="5 sec." dictionaryKey=""  destination="GENERAL" />
+        </Items>
+      </Menu>
+    </State>
+
+
+
+    <!-- Settings -> PREFERENCES -> SUBTITLES-->
+    <State xsi:type="DALSimpleMenuState" name="SUBTITLES">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsMenuState" />
+        <ActivationCriteria key="scrnCtrl" value="SUBTITLESScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="GENERAL">
+          <IrKey name="PREFERENCES" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="SUBTITLE DISPLAY" dictionaryKey="DIC_SETTINGS_SUBTITLE_DISPLAY"  destination="SUBTITLE DISPLAY" />
+          <Item name="SUBTITLE LANGUAGE" dictionaryKey="DIC_SETTINGS_LANGUAGE"  destination="SUBTITLE LANGUAGE" />
+          <Item name="DEFAULT SETTINGS" dictionaryKey="DIC_SETTINGS_RESET_SUBTITLES_SETTINGS"  destination="" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PREFERENCES -> SUBTITLES -> SUBTITLE DISPLAY-->
+    <State xsi:type="DALSimpleMenuState" name="SUBTITLE DISPLAY">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="SUBTITLE DISPLAYScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="SUBTITLE DISPLAY">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="OFF" dictionaryKey=""  destination="SUBTITLES" />
+          <Item name="ON" dictionaryKey=""  destination="SUBTITLES" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- Settings -> PREFERENCES -> SUBTITLES -> SUBTITLE LANGUAGE-->
+    <State xsi:type="DALSimpleMenuState" name="SUBTITLE LANGUAGE">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="SettingsLeafState" />
+        <ActivationCriteria key="scrnCtrl" value="PREFFERED SUBTITLE LANGUAGEScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="SUBTITLES">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ENGLISH" dictionaryKey=""  destination="SUBTITLES" />
+          <Item name="DEUTSCH" dictionaryKey=""  destination="SUBTITLES" />
+        </Items>
+      </Menu>
+    </State>
+
+
+
+    <!-- My Library - error screen -->
+    <State xsi:type="DALSimpleMenuState" name="LIBRARY ERROR">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="LibraryErrorState" />
+        <ActivationCriteria key="scrnCtrl" value="LibraryErrorScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="MY LIBRARY">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="NonCircular" selectionIdentifier="title">
+        <Items>
+          <Item name="MORE INFORMATION" dictionaryKey="DIC_MORE_INFO" destination="" />
+          <Item name="OK" dictionaryKey="DIC_OK" destination="MY LIBRARY" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!-- GUIDE VIEW -->
+    <State xsi:type="DALSimpleMenuState" name="TV GUIDE FILTER">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="AuxAppState" />
+        <ActivationCriteria key="scrnCtrl" value="GridFilter" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="ADJUST TIMELINE" dictionaryKey="DIC_UPC_ADJUST_TIMELINE" destination="ADJUST TIMELINE" />
+          <Item name="BY GENRE" dictionaryKey="DIC_GRID_LIST_VIEW_OPTION_BYGENRE" destination="" />
+          <Item name="ALL CHANNELS" dictionaryKey ="DIC_MAIN_MENU_PROG_GRID_ALL_CHANNELS" destination="TV GUIDE" />
+          <Item name="ONE CHANNEL" dictionaryKey="DIC_GRID_LIST_VIEW_OPTION_BYCHANNEL" destination="ONE CHANNEL" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!--TV GUIDE-->
+    <State name="TV GUIDE">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="AuxAppState" />
+        <ActivationCriteria key="scrnCtrl" value="GridView" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="TV GUIDE FILTER">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+        <DirectDestination name="ACTION BAR">
+          <IrKey name="SELECT" pressDuration="3"/>
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!--ONE CHANNEL-->
+    <State name="ONE CHANNEL">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="AuxAppState" />
+        <ActivationCriteria key="scrnCtrl" value="GridListView" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="TV GUIDE FILTER">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!--ADJUST TIMELINE-->
+    <State name="ADJUST TIMELINE">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="AuxAppState" />
+        <ActivationCriteria key="scrnCtrl" value="GRIDVIEWScrnCtrl" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="TV GUIDE FILTER">
+          <IrKey name="RETOUR" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="UpDown" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="30 MINUTES" dictionaryKey="DIC_GUIDE_30_MIN" destination="TV GUIDE" />
+          <Item name="60 MINUTES" dictionaryKey="DIC_GUIDE_60_MIN" destination="TV GUIDE" />
+          <Item name="90 MINUTES" dictionaryKey ="DIC_GUIDE_90_MIN" destination="TV GUIDE" />
+          <Item name="120 MINUTES" dictionaryKey="DIC_GUIDE_120_MIN" destination="TV GUIDE" />
+        </Items>
+      </Menu>
+    </State>
+
+    <!--Library-->
+    <State xsi:type="DALComplexMenuState" name="MY LIBRARY">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="LibraryTempHomeState" />
+        <ActivationCriteria key="scrnCtrl" value="LibraryHomeScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+        <DirectDestination name="LIBRARY ERROR">
+          <IrKey name="" />
+          <Delay time="5" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menus>
+        <MultiLineMenu layout="RightLeft" type="Circular" selectionIdentifier="title" name="upperItems">
+          <IdetifierEntries>
+            <Identifier key="classname" value="showCaseElement" />
+          </IdetifierEntries>
+          <Lines>
+            <Line>
+              <Item name="RECENTLY ADDED" dictionaryKey="DIC_RECENTLY_ADDED" destination="LIBRARY NO CONTENT" />
+              <Item name="MY DEVICES" dictionaryKey="DIC_MY_DEVICES" destination="LIBRARY NO CONTENT" />
+              <Item name="MY PLANNER" dictionaryKey="DIC_PLANNER" destination="MY PLANNER" />
+              <Item name="MY MUSIC" dictionaryKey="DIC_MY_MUSIC" destination="" />
+              <Item name="MY PHOTOS" dictionaryKey="DIC_MY_PHOTOS" destination="LIBRARY NO CONTENT" />
+            </Line>
+            <Line>
+              <Item name="MY APPS" dictionaryKey="DIC_MY_APPS" destination="LIBRARY NO CONTENT" />
+              <Item name="MY RECORDINGS" dictionaryKey="DIC_MY_DVR" destination="MY RECORDINGS" />
+              <Item name="MY VIDEOS" dictionaryKey="DIC_MY_VIDEOS" destination="LIBRARY NO CONTENT" />
+            </Line>
+          </Lines>
+          <InterLineNavigation>
+            <Key name="SELECT_UP"/>
+          </InterLineNavigation>
+        </MultiLineMenu>
+        <Menu layout="UpDown" type="NonCircular" name="searchMenu" selectionIdentifier="title">
+          <IdetifierEntries>
+            <Identifier key="classname" value="MenuElement" />
+          </IdetifierEntries>
+          <Items>
+            <Item name="SEARCH" dictionaryKey="DIC_PROG_ACTION_SEARCH" isPopup="true">
+              <Menu layout="UpDown" type="NonCircular" selectionIdentifier="title">
+                <IdetifierEntries>
+                  <Identifier key="classname" value="MenuElement" />
+                </IdetifierEntries>
+                <Items>
+                  <Item name="KEYWORD" dictionaryKey="DIC_MAIN_MENU_KEYWORD" destination="" />
+                  <Item name="MORE OPTIONS" dictionaryKey="DIC_MAIN_MENU_ADVANCED" destination="" />
+                </Items>
+              </Menu>
+            </Item>
+          </Items>
+        </Menu>
+      </Menus>
+      <InterMenuNavigation>
+        <Connection source="upperItems" destination="searchMenu" key="SELECT_DOWN"/>
+        <Connection source="searchMenu" destination="upperItems" key="SELECT_UP"/>
+      </InterMenuNavigation>
+    </State>
+
+
+    <!--MY LIBRARY -> MY DEVICES or MY APPS and others, when no contents exists (ERROR SCREEN)-->
+    <State name="LIBRARY NO CONTENT">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="LibraryErrorState" />
+        <ActivationCriteria key="scrnCtrl" value="LibraryErrorScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+        <DirectDestination name="MY LIBRARY">
+          <IrKey name="RETOUR"/>
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+
+    <!--MY RECORDINGS-->
+    <State name="MY RECORDINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="LibraryContentState" />
+        <ActivationCriteria key="scrnCtrl" value="LibraryFullContentScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!--MY PLANNER-->
+    <State xsi:type="DALComplexMenuState" name="MY PLANNER">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="LibraryTempHomeState" />
+        <ActivationCriteria key="scrnCtrl" value="MY DVR PLANNERScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menus>
+        <MultiLineMenu layout="RightLeft" type="Circular" selectionIdentifier="title" name="upperItems">
+          <IdetifierEntries>
+            <Identifier key="classname" value="showCaseElement" />
+          </IdetifierEntries>
+          <Lines>
+            <Line>
+              <Item name="MY PLANNER" dictionaryKey="DIC_PLANNER" destination="SCHEDULED RECORDINGS" />
+            </Line>
+            <Line>
+              <Item name="PURCHASED EVENTS" dictionaryKey="DIC_MY_PPV_EVENTS" destination="SCHEDULED RECORDINGS" />
+            </Line>
+          </Lines>
+          <InterLineNavigation>
+            <Key name="SELECT_UP"/>
+          </InterLineNavigation>
+        </MultiLineMenu>
+        <Menu layout="UpDown" type="NonCircular" name="searchMenu" selectionIdentifier="title">
+          <IdetifierEntries>
+            <Identifier key="classname" value="MenuElement" />
+          </IdetifierEntries>
+          <Items>
+            <Item name="SEARCH" dictionaryKey="DIC_PROG_ACTION_SEARCH" isPopup="true">
+              <Menu layout="UpDown" type="NonCircular" selectionIdentifier="title">
+                <IdetifierEntries>
+                  <Identifier key="classname" value="MenuElement" />
+                </IdetifierEntries>
+                <Items>
+                  <Item name="KEYWORD" dictionaryKey="DIC_MAIN_MENU_KEYWORD" destination="" />
+                  <Item name="MORE OPTIONS" dictionaryKey="DIC_MAIN_MENU_ADVANCED" destination="" />
+                </Items>
+              </Menu>
+            </Item>
+          </Items>
+        </Menu>
+      </Menus>
+      <InterMenuNavigation>
+        <Connection source="upperItems" destination="searchMenu" key="SELECT_DOWN"/>
+        <Connection source="searchMenu" destination="upperItems" key="SELECT_UP"/>
+      </InterMenuNavigation>
+    </State>
+
+    <!--MY LIBRARY -> MY DVR PLANNER -> SCHEDULED RECORDINGS-->
+    <State name="SCHEDULED RECORDINGS">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="LibraryScheduledRecordingsState" />
+        <ActivationCriteria key="scrnCtrl" value="LibraryScheduledRecScrnCtrlr" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU"/>
+        </DirectDestination>
+      </DirectDestinations>
+    </State>
+
+    <!--TRICKMODE BAR-->
+    <State  xsi:type="DALSimpleMenuState" name="TRICKMODE BAR">
+      <ActivationCriterias>
+        <ActivationCriteria key="state" value="PVRPlayerTran" />
+      </ActivationCriterias>
+      <DirectDestinations>
+        <DirectDestination name="MAIN MENU">
+          <IrKey name="MENU" />
+        </DirectDestination>
+      </DirectDestinations>
+      <Menu layout="RightLeft" type="Circular" selectionIdentifier="title">
+        <Items>
+          <Item name="rec_mc"  destination="LIVE" />
+          <Item name="skipFF_mc" />
+          <Item name="ff_mc" />
+          <Item name="pause_mc" />
+          <Item name="rw_mc" />
+          <Item name="skipRW_mc" />
+          <Item name="stop_mc"  destination="LIVE" />
+          <Item name="play_mc"  destination="LIVE" />
+        </Items>
+      </Menu>
+    </State>
+
+  </EpgStates>
+</EPG>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project Name="GET">
+  <DiskSizeKb>875724331</DiskSizeKb>
+  <NumberOfTuners>4</NumberOfTuners>
+  <UtcOffset>-4</UtcOffset>
+  <SecondsBeforeRbRecordingStarts>10</SecondsBeforeRbRecordingStarts>
+  <CmdsAddress>http://10.63.110.13:9090</CmdsAddress>
+  <UpmAddress>http://10.63.52.142:6040</UpmAddress>
+  <PpsAddress>http://10.63.52.142:6060/devices/CPE_ID/planner/</PpsAddress>
+  <ScheduleDepth>14</ScheduleDepth>
+  <MaxNumberOfRecordings>1000</MaxNumberOfRecordings>
+  <MaxNumberOfBooking>1000</MaxNumberOfBooking>
+  <MaxNumberOfReminders>0</MaxNumberOfReminders>
+  <KeepDefaultValue>false</KeepDefaultValue>
+  <LockDefaultValue>false</LockDefaultValue>
+  <DayLightSavingStart>2013-03-10T02:00:00</DayLightSavingStart>
+  <DayLightSavingEnd>2013-11-03T03:00:00</DayLightSavingEnd>
+  <MinimumLostBodyBeforePartialSeconds>121</MinimumLostBodyBeforePartialSeconds>
+  <MaxEventNamePartSize>300</MaxEventNamePartSize>
+  <MaxOverlappingRecordings>4</MaxOverlappingRecordings>
+  <GuardTimes>0 1 2 3 5 10 15 30 </GuardTimes>
+  <SingleGuardTime>120</SingleGuardTime>
+  <MinimumRecordingTimeSeconds>10</MinimumRecordingTimeSeconds>
+  <SubscribeAuthorizationId>10</SubscribeAuthorizationId>
+  <ConnectionTimeout>20000</ConnectionTimeout>
+  <!--<KvpData>
+        <KeyValuePair Key="Key1" Value="Value1">KeyValuePair1</KeyValuePair>
+        <KeyValuePair Key="Key2" Value="Value2">KeyValuePair2</KeyValuePair>
+        <KeyValuePair Key="Key3" Value="Value3">KeyValuePair3</KeyValuePair>
+        <KeyValueList Key="Key1">
+          <ValueItem Value="Value1" />
+          <ValueItem Value="Value2" />
+          <ValueItem Value="Value3" />
+        </KeyValueList>
+      </KvpData>-->
+</Project>
